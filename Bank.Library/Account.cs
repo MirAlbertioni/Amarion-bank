@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Bank.Library
 {
-    class Account
+   public class Account
     {
         public string AccountNumber { get; set; }
         public string CustomerId { get; set; }
