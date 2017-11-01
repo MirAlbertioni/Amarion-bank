@@ -1,0 +1,35 @@
+Krav för bankapplikationen
+Ni ska bygga ett realtidssystem för en bank som ska hålla objekt för alla kunder och konton i minnet
+och hålla reda på hur mycket pengar en kund har just nu.
+Systemet ska vara en konsol-applikation men i kommande inlämningsuppgift ska du bygga en
+webbapplikation som gör samma sak så var smart: separera affärslogik från presentationslager! Lägg
+dina klasser så som Bank, Customer, Account och Transaction i ett separat library-projekt och gör
+inga anrop till Console-klassen i din affärslogik.
+Skapa ett projekt för enhetstest (unit test). Skapa testklasser och metoder för att testa att affärslogiken
+fungerar. T ex att det inte går att ta ut mer pengar än det finns på kontot, att det inte går att sätta in
+eller ta ut negativa belopp, osv.
+Alla kunder och konton lagras i en textfil. När programmet startas läses angiven textfil in med data
+och alla objekt skapas. Använd args-parameter i Main-metoden för filnamnet.
+Det finns filer med data på studentportalen som du ska kunna läsa in och filen du skapar ska ha samma
+format. (Tips! Läs på mer om ToString och Parse som kan ta fler parametrar som styr hur tal och
+datum formateras och tolkas. Kolla in InvariantCulture som ofta används för import och export.)
+När programmet avslutas ska en ny uppdaterad textfil skapas. Filnamnet ska vara aktuellt datum och
+tid pa° formatet ”ååååmmdd-ttmm.txt”, t ex 20171231-2359.txt där 20171231är dagens datum och 2359
+är klockslaget. Tips! Använd DateTime.Now och läs mer om Custom Date and Time Format Strings.
+Skriv ut statistik när systemet läser in och sparar filen så det är lätt att se att det fungerar. Statistiken
+ska ange antal kunder, antal konton samt totalt saldo på alla konton.
+Det ska gå att ta fram en kundbild genom att ange kundnummer. Kundbilden ska visa all information
+om kunden och alla kundens konton. Kundbilden ska också visa det totala saldot för kunden genom att
+summera saldot på kundens konton.
+Det ska gå att söka efter kund på namn eller postort. En lista ska visas med kundnummer och namn.
+Det ska gå att skapa en ny kund. När en kund skapas ska de få ett nytt unikt kundnummer.
+Det ska också automatiskt skapas ett transaktionskonto med kunden som ägare.
+En kund måste ha ett kundnummer, namn, organisationsnummer, adress, postnummer och postort.
+Det ska gå att skapa ett nytt konto för en kund. När ett konto skapas ska de få ett nytt unikt
+kontonummer. Nya konton har alltid noll som saldo.
+Ett konto har alltid en kund som ägare och måsta ha ett kontonummer och saldo.
+Det ska även gå att ta bort konton och kunder. Konton får bara tas bort om saldo är noll. Kunder får
+bara tas bort om de inte har några konton. Det vill säga, det får inte gå att ta bort en kund som
+fortfarande har pengar på något av sina konton.
+Systemet ska också hantera insättningar, uttag och överföringar mellan konton. Det ska framgå tydligt
+om någon försöker ta ut eller överföra mer pengar än vad som finns på kontot!
