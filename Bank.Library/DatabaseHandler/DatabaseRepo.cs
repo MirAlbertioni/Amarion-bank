@@ -12,5 +12,40 @@ namespace Bank.Library.DatabaseHandler
 
         static HashSet<Customer> _customerList = new HashSet<Customer>();
         static HashSet<Account> _accountList = new HashSet<Account>();
+
+        public static void ShowStats()
+        {
+
+        }
+
+        public static void SearchCustomer()
+        {
+
+        }
+
+        public static void ShowCustomerReport()
+        {
+
+        }
+
+        public static void SaveCustomerToFile()
+        {
+
+        }
+
+        public static void DeleteCustomer()
+        {
+
+        }
+
+        public static void DeleteAccount()
+        {
+
+        }
+
+        public static void Transactions(string input)
+        {
+
+        }
     }
 }
