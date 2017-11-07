@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
+using System.IO;
+using Bank.Library.Models;
+using System.Globalization;
 
 namespace Bank.Library.DatabaseHandler
 {
@@ -9,8 +13,8 @@ namespace Bank.Library.DatabaseHandler
         public static void ReadFromTxtFile()
 
        {
-           var _customerList = DataBaseRepo.Customers;
-           var _accountList = DataBaseRepo.Accounts;
+           var _customerList = DatabaseRepo.Customers;
+           var _accountList = DatabaseRepo.Accounts;
            string path = Path.Combine(Environment.CurrentDirectory, @"text\");
            var dir = new DirectoryInfo(path);
            var textFile = (from d in dir.GetFiles()
