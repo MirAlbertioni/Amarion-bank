@@ -1,4 +1,5 @@
-﻿using Bank.Library.Models;
+﻿using Bank.Library.Menus;
+using Bank.Library.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,25 +26,33 @@ namespace Bank.Library.DatabaseHandler
         {
             Console.Clear();
             Console.WriteLine("Search for customer\n" + "You can use name or city.");
+            Console.WriteLine("\n* Back to Menu press: Y");
             var input = Console.ReadLine();
             bool noCustomersFound = true;
-
-            foreach (var item in Customers)
+            if (input == "Y".ToLower() || input == "y".ToUpper())
             {
-                if (item.Name.ToUpper().Contains(input.ToUpper()) || item.City.ToUpper().Contains(input.ToUpper()))
+                MainMenu.ShowMenu();
+                Console.ReadLine();
+            }
+            else
+            {
+
+                foreach (var item in Customers)
                 {
-                    Console.WriteLine("ID: " + item.Id + "\nName: " + item.Name + "\nCity " + item.City);
-                    noCustomersFound = false;
+                    if (item.Name.ToUpper().Contains(input.ToUpper()) || item.City.ToUpper().Contains(input.ToUpper()))
+                    {
+                        Console.WriteLine("ID: " + item.Id + "\nName: " + item.Name + "\nCity " + item.City);
+                        noCustomersFound = false;
+                    }
                 }
+
+                if (noCustomersFound == true)
+                {
+                    Console.WriteLine("Can't find any customer with your input. Press enter to try again");
+
+                }
+                Console.ReadLine();
             }
-
-
-            if (noCustomersFound == true)
-            {
-                Console.WriteLine("Can't find any customer with your input. Press enter to try again");
-
-            }
-            Console.ReadLine();
         }
 
         public static void ShowCustomerReport()
