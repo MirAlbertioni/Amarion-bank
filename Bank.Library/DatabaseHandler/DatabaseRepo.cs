@@ -23,20 +23,13 @@ namespace Bank.Library.DatabaseHandler
         }
 
         public static void SearchCustomer()
+
         {
             Console.Clear();
             Console.WriteLine("Search for customer\n" + "You can use name or city.");
-            Console.WriteLine("\n* Back to Menu press: Y");
             var input = Console.ReadLine();
             bool noCustomersFound = true;
-            if (input == "Y".ToLower() || input == "y".ToUpper())
-            {
-                MainMenu.ShowMenu();
-                Console.ReadLine();
-            }
-            else
-            {
-
+         
                 foreach (var item in Customers)
                 {
                     if (item.Name.ToUpper().Contains(input.ToUpper()) || item.City.ToUpper().Contains(input.ToUpper()))
@@ -53,7 +46,6 @@ namespace Bank.Library.DatabaseHandler
                 }
                 Console.ReadLine();
             }
-        }
 
         public static void ShowCustomerReport()
         {
@@ -62,59 +54,66 @@ namespace Bank.Library.DatabaseHandler
             var input = Console.ReadLine();
             bool noCustomersFound = true;
 
-            foreach (var item in Customers)
-            {
-                if (item.Id.ToString().Contains(input))
+                foreach (var item in Customers)
                 {
-                    Console.WriteLine("ID: " + item.Id +
-                        "\nOrganisation number: " + item.OrgNumber +
-                        "\nName: " + item.Name +
-                        "\nAdress " + item.Adress + " " + item.AreaCode + "\n\n");
-                    noCustomersFound = false;
+                    if (item.Id.ToString().Contains(input))
+                    {
+                        Console.WriteLine("ID: " + item.Id +
+                            "\nOrganisation number: " + item.OrgNumber +
+                            "\nName: " + item.Name +
+                            "\nAdress " + item.Adress + " " + item.AreaCode + "\n\n");
+                        noCustomersFound = false;
+                    }
                 }
-            }
 
-            HashSet<decimal> balanceList = new HashSet<decimal>();
-            foreach (var account in Accounts)
-            {
-                if (account.CustomerId.ToString().Contains(input))
+                HashSet<decimal> balanceList = new HashSet<decimal>();
+                foreach (var account in Accounts)
                 {
-                    Console.WriteLine(account.CustomerId +
-                        ": " + account.Balance + " kr");
-                    noCustomersFound = false;
-                    balanceList.Add(account.Balance);
+                    if (account.CustomerId.ToString().Contains(input))
+                    {
+                        Console.WriteLine(account.CustomerId +
+                            ": " + account.Balance + " kr");
+                        noCustomersFound = false;
+                        balanceList.Add(account.Balance);
 
-                    Console.WriteLine(balanceList.Sum());
+                        Console.WriteLine(balanceList.Sum());
+                    }
                 }
+
+
+                if (noCustomersFound == true)
+                {
+                    Console.WriteLine("Can't find any customer with your input. Press enter to try again");
+
+                }
+                Console.ReadLine();
             }
-
-
-            if (noCustomersFound == true)
-            {
-                Console.WriteLine("Can't find any customer with your input. Press enter to try again");
-
-            }
-            Console.ReadLine();
-        }
 
         public static void SaveCustomerToFile()
         {
-
+          
         }
 
         public static void DeleteCustomer()
         {
-
+          
         }
 
         public static void DeleteAccount()
         {
-
+       
         }
 
         public static void Transactions(string input)
         {
-
+         
         }
+
+        //public static void BackToMenu()
+        //{
+        //    Console.Clear();
+        //    MainMenu.ShowMenu();
+        //    Console.ReadLine();
+        //}
     }
 }
