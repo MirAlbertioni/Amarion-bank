@@ -15,16 +15,6 @@ namespace Bank.Library.DatabaseHandler
         static HashSet<Customer> _customerList = new HashSet<Customer>();
         static HashSet<Account> _accountList = new HashSet<Account>();
 
-        public static void GoBackToMenu()
-        {
-            Console.WriteLine("Press 9 to go back to menu");
-            var menu = Console.ReadLine();
-            if (menu == "9")
-            {
-                MainMenu.Menu();
-            }
-        }
-
         public static void ShowStats()
         {
             Console.WriteLine("Customers: " + _customerList.Count());
@@ -51,13 +41,10 @@ namespace Bank.Library.DatabaseHandler
             if (noCustomersFound == true)
             {
                 Console.WriteLine("Can't find any customer with your input. Press enter to try again");
+                Console.ReadLine();
+                SearchCustomer();
             }
-            Console.WriteLine("Press 9 to go back to menu");
-            var menu = Console.ReadLine();
-            if (menu == "9")
-            {
-                MainMenu.Menu();
-            }
+            BackToMenu.GoBackToMenu();
         }
 
         public static void ShowCustomerReport()
@@ -67,40 +54,41 @@ namespace Bank.Library.DatabaseHandler
             var input = Console.ReadLine();
             bool noCustomersFound = true;
 
-                foreach (var item in Customers)
+            foreach (var item in Customers)
+            {
+                if (item.Id.ToString().Contains(input))
                 {
-                    if (item.Id.ToString().Contains(input))
-                    {
-                        Console.WriteLine("ID: " + item.Id +
-                            "\nOrganisation number: " + item.OrgNumber +
-                            "\nName: " + item.Name +
-                            "\nAdress " + item.Adress + " " + item.AreaCode + "\n\n");
-                        noCustomersFound = false;
-                    }
+                    Console.WriteLine("ID: " + item.Id +
+                        "\nOrganisation number: " + item.OrgNumber +
+                        "\nName: " + item.Name +
+                        "\nAdress " + item.Adress + " " + item.AreaCode + "\n\n");
+                    noCustomersFound = false;
                 }
-
-                HashSet<decimal> balanceList = new HashSet<decimal>();
-                foreach (var account in Accounts)
-                {
-                    if (account.CustomerId.ToString().Contains(input))
-                    {
-                        Console.WriteLine(account.CustomerId +
-                            ": " + account.Balance + " kr");
-                        noCustomersFound = false;
-                        balanceList.Add(account.Balance);
-
-                        Console.WriteLine(balanceList.Sum());
-                    }
-                }
-
-
-                if (noCustomersFound == true)
-                {
-                    Console.WriteLine("Can't find any customer with your input. Press enter to try again");
-
-                }
-                Console.ReadLine();
             }
+
+            HashSet<decimal> balanceList = new HashSet<decimal>();
+            foreach (var account in Accounts)
+            {
+                if (account.CustomerId.ToString().Contains(input))
+                {
+                    Console.WriteLine(account.CustomerId +
+                        ": " + account.Balance + " kr");
+                    noCustomersFound = false;
+                    balanceList.Add(account.Balance);
+
+                    Console.WriteLine(balanceList.Sum());
+                }
+            }
+
+
+            if (noCustomersFound == true)
+            {
+                Console.WriteLine("Can't find any customer with your input. Press enter to try again");
+                Console.ReadLine();
+                ShowCustomerReport();
+            }
+            BackToMenu.GoBackToMenu();
+        }
 
         public static void SaveCustomerToFile()
         {

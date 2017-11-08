@@ -18,9 +18,8 @@ namespace Bank.Library.Menus
                 "3) Create new customer \n " +
                 "4) Delete customer \n " +
                 "5) Create new account \n " +
-                "6) Delete account \n " +
-                "7) Account overview \n " +
-                "\n 9) Back to menu\n" );
+                "6) Delete account \n\n " +
+                "9) Account overview \n ");
 
             DatabaseRepo.ShowStats();
 
