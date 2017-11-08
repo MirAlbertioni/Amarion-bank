@@ -1,6 +1,7 @@
 ﻿using Bank.Library.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Bank.Library.DatabaseHandler
@@ -15,7 +16,9 @@ namespace Bank.Library.DatabaseHandler
 
         public static void ShowStats()
         {
-
+            Console.WriteLine("Customers: " + _customerList.Count());
+            Console.WriteLine("Accounts: " + _accountList.Count());
+            Console.WriteLine("Total: " + _accountList.Sum(x => x.Balance) + " kr");
         }
 
         public static void SearchCustomer()
