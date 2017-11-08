@@ -23,7 +23,27 @@ namespace Bank.Library.DatabaseHandler
 
         public static void SearchCustomer()
         {
+            Console.Clear();
+            Console.WriteLine("Search for customer\n" + "You can use name or city.");
+            var input = Console.ReadLine();
+            bool noCustomersFound = true;
 
+            foreach (var item in Customers)
+            {
+                if (item.Name.ToUpper().Contains(input.ToUpper()) || item.City.ToUpper().Contains(input.ToUpper()))
+                {
+                    Console.WriteLine("ID: " + item.Id + "\nName: " + item.Name + "\nCity " + item.City);
+                    noCustomersFound = false;
+                }
+            }
+
+
+            if (noCustomersFound == true)
+            {
+                Console.WriteLine("Can't find any customer with your input. Press enter to try again");
+
+            }
+            Console.ReadLine();
         }
 
         public static void ShowCustomerReport()
