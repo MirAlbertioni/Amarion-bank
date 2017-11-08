@@ -26,6 +26,15 @@ namespace Bankproject
             {
                 DatabaseRepo.ShowCustomerReport();
             }
+
+
+
+
+
+            else if(userInput == "7")
+            {
+                AccountMenu.ShowAccountMenu();
+            }
         }
     }
 }
