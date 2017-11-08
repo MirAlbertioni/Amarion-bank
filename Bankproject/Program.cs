@@ -1,13 +1,27 @@
 ﻿using System;
+using Bank.Library.Menus;
+using Bank.Library.DatabaseHandler;
 
 namespace Bankproject
 {
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
-            Console.ReadLine();
+            MainMenu.ShowMenu();
+            ReadFile.ReadFromTxtFile();
+            
+            DatabaseRepo.ShowStats();
+
+            var userInput = Console.ReadLine();
+            if (userInput == "0")
+            {
+                SaveNewFile.WhenChangesCreateNewFile();
+            }
+            else if (userInput == "1")
+            {
+                DatabaseRepo.SearchCustomer();
+            }
         }
     }
 }
