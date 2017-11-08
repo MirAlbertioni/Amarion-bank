@@ -28,7 +28,44 @@ namespace Bank.Library.DatabaseHandler
 
         public static void ShowCustomerReport()
         {
+            Console.Clear();
+            Console.WriteLine("Search customer by ID");
+            var input = Console.ReadLine();
+            bool noCustomersFound = true;
 
+            foreach (var item in Customers)
+            {
+                if (item.Id.ToString().Contains(input))
+                {
+                    Console.WriteLine("ID: " + item.Id +
+                        "\nOrganisation number: " + item.OrgNumber +
+                        "\nName: " + item.Name +
+                        "\nAdress " + item.Adress + " " + item.AreaCode + "\n\n");
+                    noCustomersFound = false;
+                }
+            }
+
+            HashSet<decimal> balanceList = new HashSet<decimal>();
+            foreach (var account in Accounts)
+            {
+                if (account.CustomerId.ToString().Contains(input))
+                {
+                    Console.WriteLine(account.CustomerId +
+                        ": " + account.Balance + " kr");
+                    noCustomersFound = false;
+                    balanceList.Add(account.Balance);
+
+                    Console.WriteLine(balanceList.Sum());
+                }
+            }
+
+
+            if (noCustomersFound == true)
+            {
+                Console.WriteLine("Can't find any customer with your input. Press enter to try again");
+
+            }
+            Console.ReadLine();
         }
 
         public static void SaveCustomerToFile()
