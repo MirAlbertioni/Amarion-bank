@@ -22,6 +22,10 @@ namespace Bankproject
             {
                 DatabaseRepo.SearchCustomer();
             }
+            else if (userInput == "2")
+            {
+                DatabaseRepo.ShowCustomerReport();
+            }
         }
     }
 }
