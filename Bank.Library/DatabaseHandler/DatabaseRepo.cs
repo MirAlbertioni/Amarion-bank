@@ -29,23 +29,23 @@ namespace Bank.Library.DatabaseHandler
             Console.WriteLine("Search for customer\n" + "You can use name or city.");
             var input = Console.ReadLine();
             bool noCustomersFound = true;
-         
-                foreach (var item in Customers)
-                {
-                    if (item.Name.ToUpper().Contains(input.ToUpper()) || item.City.ToUpper().Contains(input.ToUpper()))
-                    {
-                        Console.WriteLine("ID: " + item.Id + "\nName: " + item.Name + "\nCity " + item.City);
-                        noCustomersFound = false;
-                    }
-                }
 
-                if (noCustomersFound == true)
+            foreach (var item in Customers)
+            {
+                if (item.Name.ToUpper().Contains(input.ToUpper()) || item.City.ToUpper().Contains(input.ToUpper()))
                 {
-                    Console.WriteLine("Can't find any customer with your input. Press enter to try again");
-
+                    Console.WriteLine("ID: " + item.Id + "\nName: " + item.Name + "\nCity " + item.City);
+                    noCustomersFound = false;
                 }
-                Console.ReadLine();
             }
+
+            if (noCustomersFound == true)
+            {
+                Console.WriteLine("Can't find any customer with your input. Press enter to try again");
+
+            }
+            Console.ReadLine();
+        }
 
         public static void ShowCustomerReport()
         {
@@ -54,59 +54,83 @@ namespace Bank.Library.DatabaseHandler
             var input = Console.ReadLine();
             bool noCustomersFound = true;
 
-                foreach (var item in Customers)
+            foreach (var item in Customers)
+            {
+                if (item.Id.ToString().Contains(input))
                 {
-                    if (item.Id.ToString().Contains(input))
-                    {
-                        Console.WriteLine("ID: " + item.Id +
-                            "\nOrganisation number: " + item.OrgNumber +
-                            "\nName: " + item.Name +
-                            "\nAdress " + item.Adress + " " + item.AreaCode + "\n\n");
-                        noCustomersFound = false;
-                    }
+                    Console.WriteLine("ID: " + item.Id +
+                        "\nOrganisation number: " + item.OrgNumber +
+                        "\nName: " + item.Name +
+                        "\nAdress " + item.Adress + " " + item.AreaCode + "\n\n");
+                    noCustomersFound = false;
                 }
-
-                HashSet<decimal> balanceList = new HashSet<decimal>();
-                foreach (var account in Accounts)
-                {
-                    if (account.CustomerId.ToString().Contains(input))
-                    {
-                        Console.WriteLine(account.CustomerId +
-                            ": " + account.Balance + " kr");
-                        noCustomersFound = false;
-                        balanceList.Add(account.Balance);
-
-                        Console.WriteLine(balanceList.Sum());
-                    }
-                }
-
-
-                if (noCustomersFound == true)
-                {
-                    Console.WriteLine("Can't find any customer with your input. Press enter to try again");
-
-                }
-                Console.ReadLine();
             }
+
+            HashSet<decimal> balanceList = new HashSet<decimal>();
+            foreach (var account in Accounts)
+            {
+                if (account.CustomerId.ToString().Contains(input))
+                {
+                    Console.WriteLine(account.CustomerId +
+                        ": " + account.Balance + " kr");
+                    noCustomersFound = false;
+                    balanceList.Add(account.Balance);
+
+                    Console.WriteLine(balanceList.Sum());
+                }
+            }
+
+
+            if (noCustomersFound == true)
+            {
+                Console.WriteLine("Can't find any customer with your input. Press enter to try again");
+
+            }
+            Console.ReadLine();
+        }
 
         public static void SaveCustomerToFile()
         {
-          
+
         }
 
         public static void DeleteCustomer()
         {
-          
+            Console.Clear();
+            Console.Write("Input customer Id for the account you want to delete: ");
+            var userInput = Console.ReadLine();
+
+            foreach (var item in _accountList.ToList())
+            {
+                foreach (var c in _customerList.ToList())
+                {
+                    if (Convert.ToInt32(userInput) == c.Id && item.CustomerId == c.Id)
+                    {
+                        if (item.Balance > 0)
+                        {
+                            Console.WriteLine("Account has balance, cannot remove");
+                        }
+                        else
+                        {
+                            item.CustomerId = c.Id;
+                            var acc = item;
+                            _accountList.Remove(acc);
+                            _customerList.Remove(c);
+                            SaveNewFile.WhenChangesCreateNewFile();
+                        }
+                    }
+                }
+            }
         }
 
         public static void DeleteAccount()
         {
-       
+
         }
 
         public static void Transactions(string input)
         {
-         
+
         }
 
         //public static void BackToMenu()
