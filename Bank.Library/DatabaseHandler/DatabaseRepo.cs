@@ -157,6 +157,15 @@ namespace Bank.Library.DatabaseHandler
             var userInput = Console.ReadLine();
             Console.Clear();
 
+
+            foreach (var acc in _accountList.ToList())
+            {
+                if (acc.AccountNumber == Convert.ToInt32(userInput))
+                {
+
+                }
+            }
+
         }
 
         //public static void BackToMenu()
