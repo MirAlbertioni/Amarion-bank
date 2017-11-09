@@ -125,6 +125,9 @@ namespace Bank.Library.DatabaseHandler
 
         public static void DeleteAccount()
         {
+            Console.Clear();
+            Console.Write("Inpute customer Id for the account you want to delete: ");
+            var userInput = Console.ReadLine(); 
 
         }
 
