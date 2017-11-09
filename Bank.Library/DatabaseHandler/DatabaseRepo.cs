@@ -162,7 +162,49 @@ namespace Bank.Library.DatabaseHandler
             {
                 if (acc.AccountNumber == Convert.ToInt32(userInput))
                 {
+                    Console.WriteLine("Accounts: " + acc.AccountNumber + "\n" + "Balance: " + acc.Balance + "kr");
 
+                    if( input == 0.ToString())
+                    {
+                        SaveNewFile.WhenChangesCreateNewFile();
+                    }
+                    else if (input == 1.ToString())
+                    {
+                        Console.WriteLine("Enter amount for withdrawal");
+                        var withdraw = Convert.ToDecimal(Console.ReadLine());
+                        acc.Balance = acc.Balance - withdraw;
+                        Console.Clear();
+                    }
+                    else if (input == 2.ToString())
+                    {
+                        Console.WriteLine("Enter amount you wish to insert");
+                        var insert = Convert.ToDecimal(Console.ReadLine());
+                        acc.Balance = acc.Balance + insert;
+                        Console.Clear();
+                    } else if (input == 2.ToString())
+                    {
+                        var user = _accountList.SingleOrDefault(x => x.AccountNumber == Convert.ToInt32(userInput));
+                        Console.WriteLine("Transfer to account number?");
+                        var transferInput = Console.ReadLine();
+                        var transferAccount = _accountList.SingleOrDefault(x => x.AccountNumber == Convert.ToInt32(transferInput));
+
+                        Console.WriteLine("From what account do you want to transfer?");
+                        var yourAccInput = Console.ReadLine();
+                        if (Convert.ToInt32(yourAccInput) == user.AccountNumber)
+                        {
+                            Console.WriteLine("Enter amount you wish to transfer?");
+                            var amount = Console.ReadLine();
+                            Console.WriteLine("Transfer completed, " + Convert.ToDecimal(amount) + "kr was sent from " + user.AccountNumber
+                                + " to account number " + transferAccount.AccountNumber);
+                            var myBalance = user.Balance - Convert.ToDecimal(amount);
+                            user.Balance = myBalance;
+
+                            var transferAccountBalance = Convert.ToDecimal(amount) + transferAccount.Balance;
+                            transferAccount.Balance = transferAccountBalance;
+                            _accountList.Add(user);
+                            _accountList.Add(transferAccount);
+                        }
+                    }
                 }
             }
 
