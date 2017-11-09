@@ -160,47 +160,49 @@ namespace Bank.Library.DatabaseHandler
             var acc = _accountList.SingleOrDefault(x => x.AccountNumber == Convert.ToInt32(userInput));
 
             Console.WriteLine("Accounts: " + acc.AccountNumber + "\n" + "Balance: " + acc.Balance + "kr");
-
-            if (input == 0.ToString())
+             
+            switch (input)
             {
-                SaveNewFile.WhenChangesCreateNewFile();
-            }
-            else if (input == 1.ToString())
-            {
-                Console.WriteLine("Enter amount for withdrawal");
-                var withdraw = Convert.ToDecimal(Console.ReadLine());
-                acc.Balance = acc.Balance - withdraw;
-                Console.Clear();
-            }
-            else if (input == 2.ToString())
-            {
-                Console.WriteLine("Enter amount you wish to insert");
-                var insert = Convert.ToDecimal(Console.ReadLine());
-                acc.Balance = acc.Balance + insert;
-                Console.Clear();
-            }
-            else if (input == 2.ToString())
-            {
-                Console.WriteLine("Transfer to account number?");
-                var transferInput = Console.ReadLine();
-                var transferAccount = _accountList.SingleOrDefault(x => x.AccountNumber == Convert.ToInt32(transferInput));
-                decimal amount = 0m ;
-                Console.WriteLine("From what account do you want to transfer?");
-                var yourAccInput = Console.ReadLine();
-                if (Convert.ToInt32(yourAccInput) == acc.AccountNumber)
-                {
-                    Console.WriteLine("Enter amount you wish to transfer?");
-                    amount = Convert.ToDecimal(Console.ReadLine());
-                    if (acc.Balance > amount)
+                case "0":
+                    SaveNewFile.WhenChangesCreateNewFile();
+                    break;
+                case "1":
+                    Console.WriteLine("Enter amount for withdrawal");
+                    var withdraw = Convert.ToDecimal(Console.ReadLine());
+                    acc.Balance = acc.Balance - withdraw;
+                    Console.Clear();
+                    break;
+                case "2":
+                    Console.WriteLine("Enter amount you wish to insert");
+                    var insert = Convert.ToDecimal(Console.ReadLine());
+                    acc.Balance = acc.Balance + insert;
+                    Console.Clear();
+                    break;
+                case "3":
+                    var user = _accountList.SingleOrDefault(x => x.AccountNumber == Convert.ToInt32(userInput));
+                    Console.WriteLine("Transfer to account number?");
+                    var transferInput = Console.ReadLine();
+                    var transferAccount = _accountList.SingleOrDefault(x => x.AccountNumber == Convert.ToInt32(transferInput));
+                    decimal amount = 0m;
+                    Console.WriteLine("From what account do you want to transfer?");
+                    var yourAccInput = Convert.ToInt32(Console.ReadLine());
+                    if (yourAccInput == acc.AccountNumber)
                     {
-                        acc.Balance = acc.Balance - amount;
-                        transferAccount.Balance = transferAccount.Balance + amount;
+                        Console.WriteLine("Enter amount you wish to transfer?");
+                        amount = Convert.ToDecimal(Console.ReadLine());
+                        if (acc.Balance > amount)
+                        {
+                            acc.Balance = acc.Balance - amount;
+                            transferAccount.Balance = transferAccount.Balance + amount;
+                        }
+                        else
+                        {
+                            Console.WriteLine("This account have not enough money to do this Transaction, press any key to try agine");
+                        }
                     }
-                    else
-                    {
-                        Console.WriteLine("Your account have not enough money " + acc.Balance + " to do this Transaction, press any key to try agine");
-                    }
-                }
+                    Console.WriteLine("Transfer completed, " + amount + "kr was sent from " + acc.AccountNumber
+                        + " to account number " + transferAccount.AccountNumber);
+                    break;
 
                 Console.WriteLine("Transfer completed, " + amount + "kr was sent from " + acc.AccountNumber
                     + " to account number " + transferAccount.AccountNumber);
