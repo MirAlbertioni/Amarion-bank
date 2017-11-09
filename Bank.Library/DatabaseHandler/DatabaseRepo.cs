@@ -131,21 +131,17 @@ namespace Bank.Library.DatabaseHandler
 
             foreach (var item in _accountList.ToList())
             {
-
-                foreach (var c in _customerList.ToList())
+                if (Convert.ToInt32(userInput) == item.AccountNumber)
                 {
-                    if (Convert.ToInt32(userInput) == item.AccountNumber)
+                    if (item.Balance > 0)
                     {
-                        if (item.Balance > 0)
-                        {
-                            Console.WriteLine("Account has balance, cannot remove");
-                        }
-                        else
-                        {
-                            var acc = item;
-                            _accountList.Remove(acc);
-                            SaveNewFile.WhenChangesCreateNewFile();
-                        }
+                        Console.WriteLine("Account has balance, cannot remove");
+                    }
+                    else
+                    {
+                        var acc = item;
+                        _accountList.Remove(acc);
+                        SaveNewFile.WhenChangesCreateNewFile();
                     }
                 }
             }
