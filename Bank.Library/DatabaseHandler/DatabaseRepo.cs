@@ -130,7 +130,12 @@ namespace Bank.Library.DatabaseHandler
             var userInput = Console.ReadLine();
 
             var account = _accountList.Where(x => x.AccountNumber == Convert.ToInt32(userInput)).FirstOrDefault();
-
+            if (account == null)
+            {
+                Console.WriteLine("Input is wrong or The account doesn't exist, Press enter to continue.");
+                Console.ReadLine();
+                DeleteAccount();
+            }
             if (account.Balance == 0)
             {
                 _accountList.Remove(account);
