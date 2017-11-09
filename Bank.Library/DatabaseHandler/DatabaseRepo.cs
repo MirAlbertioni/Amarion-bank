@@ -152,6 +152,10 @@ namespace Bank.Library.DatabaseHandler
 
         public static void Transactions(string input)
         {
+            Console.Clear();
+            Console.Write("Type in account number to login:");
+            var userInput = Console.ReadLine();
+            Console.Clear();
 
         }
 
