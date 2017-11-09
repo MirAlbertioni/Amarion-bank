@@ -205,6 +205,9 @@ namespace Bank.Library.DatabaseHandler
                             _accountList.Add(transferAccount);
                         }
                     }
+                    Console.WriteLine("Account: " + acc.AccountNumber + "Current balance is: " + acc.Balance + " kr");
+                    _accountList.Add(acc);
+                    SaveNewFile.WhenChangesCreateNewFile();
                 }
             }
 
