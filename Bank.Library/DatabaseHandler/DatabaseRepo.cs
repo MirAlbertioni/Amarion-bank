@@ -207,15 +207,18 @@ namespace Bank.Library.DatabaseHandler
                     Console.WriteLine("Enter amount for withdrawal");
                     var withdrawAmount = Console.ReadLine();
                     var amountReplace = withdrawAmount.Replace(".", ",");
-                    decimal newAmount;
-                    var parsedSucced = decimal.TryParse(amountReplace, NumberStyles.Currency, new CultureInfo("sv-SE"), out newAmount);
-                    acc.Balance = acc.Balance - newAmount;
+                    decimal newWithdrawAmount;
+                    var withdrawParsedSucced = decimal.TryParse(amountReplace, NumberStyles.Currency, new CultureInfo("sv-SE"), out newWithdrawAmount);
+                    acc.Balance = acc.Balance - newWithdrawAmount;
                     Console.Clear();
                     break;
                 case "2":
                     Console.WriteLine("Enter amount you wish to insert");
-                    var insert = Convert.ToDecimal(Console.ReadLine());
-                    acc.Balance = acc.Balance + insert;
+                    var insert = Console.ReadLine();
+                    var insertReplace = insert.Replace(".", ",");
+                    decimal newInsertAmount;
+                    var insertParsedSucced = decimal.TryParse(insertReplace, NumberStyles.Currency, new CultureInfo("sv-SE"), out newInsertAmount);
+                    acc.Balance = acc.Balance + newInsertAmount;
                     Console.Clear();
                     break;
                 case "3":
