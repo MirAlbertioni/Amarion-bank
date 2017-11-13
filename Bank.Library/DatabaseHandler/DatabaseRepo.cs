@@ -2,6 +2,8 @@
 using Bank.Library.Models;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -14,6 +16,17 @@ namespace Bank.Library.DatabaseHandler
 
         static HashSet<Customer> _customerList = new HashSet<Customer>();
         static HashSet<Account> _accountList = new HashSet<Account>();
+
+        public static void GoBackToMenu()
+        {
+            Console.WriteLine("Press 9 to go back to menu");
+            var menu = Console.ReadLine();
+            if (menu == "9")
+            {
+                MainMenu.ShowMenu();
+            }
+        }
+
 
         public static void ShowStats()
         {
@@ -41,9 +54,14 @@ namespace Bank.Library.DatabaseHandler
 
             if (noCustomersFound == true)
             {
-                Console.WriteLine("Can't find any customer with your input. Press enter to try again");
+                Console.WriteLine("Can't find any customer with your input. Press enter to try again or press 9 back to menu");
+                var inp = Console.ReadLine();
 
+                if (inp == "9") MainMenu.ShowMenu();
+
+                else SearchCustomer();
             }
+            GoBackToMenu();
             Console.ReadLine();
         }
 
@@ -83,14 +101,68 @@ namespace Bank.Library.DatabaseHandler
 
             if (noCustomersFound == true)
             {
-                Console.WriteLine("Can't find any customer with your input. Press enter to try again");
+                Console.WriteLine("Can't find any customer with your input. Press enter to try again or press 9 to go back to Menu");
+
+                var inp = Console.ReadLine();
+
+                if (inp == "9") MainMenu.ShowMenu();
+
+                else ShowCustomerReport();
 
             }
+            GoBackToMenu();
             Console.ReadLine();
         }
 
         public static void SaveCustomerToFile()
         {
+            Console.Clear();
+            Console.WriteLine("Create new customer\n");
+            
+            Console.WriteLine("Organisation number: ");
+            var orgNr = Console.ReadLine();     
+            Console.WriteLine("Name: ");
+            var name = Console.ReadLine();
+            Console.WriteLine("Adress: ");
+            var adress = Console.ReadLine();
+            Console.WriteLine("AreaCode: ");
+            var areaCode = Console.ReadLine();
+            Console.WriteLine("City: ");
+            var city = Console.ReadLine();
+            Console.WriteLine("Region: ");
+            var region = Console.ReadLine();
+            Console.WriteLine("Country: ");
+            var country = Console.ReadLine();
+            Console.WriteLine("Phone: ");
+            var phone = Console.ReadLine();
+
+                var newId = _customerList.Last().Id;
+                newId++;
+                var newCustomer = new Customer
+                {
+                    Id = newId,
+                    OrgNumber = orgNr,
+                    Name = name,
+                    Adress = adress,
+                    AreaCode = areaCode,
+                    City = city,
+                    Region = region,
+                    Country = country,
+                    Phone = phone
+                };
+                _customerList.Add(newCustomer);
+
+            var newAccId = _accountList.Last().AccountNumber;
+            newAccId++;
+            var account = new Account
+            {
+                CustomerId = newCustomer.Id,
+                AccountNumber = newAccId,
+                Balance = 0
+            };
+            _accountList.Add(account);
+            SaveNewFile.WhenChangesCreateNewFile();
+
 
         }
 
@@ -160,7 +232,7 @@ namespace Bank.Library.DatabaseHandler
             var acc = _accountList.SingleOrDefault(x => x.AccountNumber == Convert.ToInt32(userInput));
 
             Console.WriteLine("Accounts: " + acc.AccountNumber + "\n" + "Balance: " + acc.Balance + "kr");
-             
+
             switch (input)
             {
                 case "0":
@@ -204,10 +276,10 @@ namespace Bank.Library.DatabaseHandler
                         + " to account number " + transferAccount.AccountNumber);
                     break;
 
-                Console.WriteLine("Transfer completed, " + amount + "kr was sent from " + acc.AccountNumber
-                    + " to account number " + transferAccount.AccountNumber);
-                _accountList.Add(acc);
-                _accountList.Add(transferAccount);
+                    Console.WriteLine("Transfer completed, " + amount + "kr was sent from " + acc.AccountNumber
+                        + " to account number " + transferAccount.AccountNumber);
+                    _accountList.Add(acc);
+                    _accountList.Add(transferAccount);
             }
             Console.WriteLine("Account: " + acc.AccountNumber + "Current balance is: " + acc.Balance + " kr");
             _accountList.Add(acc);
@@ -223,3 +295,6 @@ namespace Bank.Library.DatabaseHandler
         //}
     }
 }
+
+
+
