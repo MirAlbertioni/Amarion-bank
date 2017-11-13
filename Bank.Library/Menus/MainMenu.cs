@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Bank.Library.DatabaseHandler;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -20,6 +21,27 @@ namespace Bank.Library.Menus
                 "6) Delete account \n " +
                 "7) Account overview \n " +
                 "\n 9) Back to menu\n" );
+
+            var userInput = Console.ReadLine();
+            if (userInput == "0")
+            {
+                SaveNewFile.WhenChangesCreateNewFile();
+            }
+            else if (userInput == "1")
+            {
+                DatabaseRepo.SearchCustomer();
+            }
+            else if (userInput == "2")
+            {
+                DatabaseRepo.ShowCustomerReport();
+            }
+
+
+            else if (userInput == "7")
+            {
+                AccountMenu.ShowAccountMenu();
+            }
+
         }
     }
 }

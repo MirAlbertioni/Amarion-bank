@@ -8,33 +8,10 @@ namespace Bankproject
     {
         public static void Main(string[] args)
         {
-            MainMenu.ShowMenu();
             ReadFile.ReadFromTxtFile();
-            
+            MainMenu.ShowMenu();
             DatabaseRepo.ShowStats();
 
-            var userInput = Console.ReadLine();
-            if (userInput == "0")
-            {
-                SaveNewFile.WhenChangesCreateNewFile();
-            }
-            else if (userInput == "1")
-            {
-                DatabaseRepo.SearchCustomer();
-            }
-            else if (userInput == "2")
-            {
-                DatabaseRepo.ShowCustomerReport();
-            }
-
-
-
-
-
-            else if(userInput == "7")
-            {
-                AccountMenu.ShowAccountMenu();
-            }
         }
     }
 }

@@ -15,6 +15,17 @@ namespace Bank.Library.DatabaseHandler
         static HashSet<Customer> _customerList = new HashSet<Customer>();
         static HashSet<Account> _accountList = new HashSet<Account>();
 
+        public static void GoBackToMenu()
+        {
+            Console.WriteLine("Press 9 to go back to menu");
+            var menu = Console.ReadLine();
+            if (menu == "9")
+            {
+                MainMenu.ShowMenu();
+            }
+        }
+
+
         public static void ShowStats()
         {
             Console.WriteLine("Customers: " + _customerList.Count());
@@ -41,9 +52,14 @@ namespace Bank.Library.DatabaseHandler
 
             if (noCustomersFound == true)
             {
-                Console.WriteLine("Can't find any customer with your input. Press enter to try again");
+                Console.WriteLine("Can't find any customer with your input. Press enter to try again or press 9 back to menu");
+                var inp = Console.ReadLine();
 
+                if (inp == "9") MainMenu.ShowMenu();
+
+                else SearchCustomer();
             }
+            GoBackToMenu();
             Console.ReadLine();
         }
 
@@ -83,15 +99,22 @@ namespace Bank.Library.DatabaseHandler
 
             if (noCustomersFound == true)
             {
-                Console.WriteLine("Can't find any customer with your input. Press enter to try again");
+                Console.WriteLine("Can't find any customer with your input. Press enter to try again or press 9 to go back to Menu");
+
+                var inp = Console.ReadLine();
+
+                if (inp == "9") MainMenu.ShowMenu();
+
+                else ShowCustomerReport();
 
             }
+            GoBackToMenu();
             Console.ReadLine();
         }
 
         public static void SaveCustomerToFile()
         {
-
+                
         }
 
         public static void DeleteCustomer()
@@ -160,7 +183,7 @@ namespace Bank.Library.DatabaseHandler
             var acc = _accountList.SingleOrDefault(x => x.AccountNumber == Convert.ToInt32(userInput));
 
             Console.WriteLine("Accounts: " + acc.AccountNumber + "\n" + "Balance: " + acc.Balance + "kr");
-             
+
             switch (input)
             {
                 case "0":
@@ -204,10 +227,10 @@ namespace Bank.Library.DatabaseHandler
                         + " to account number " + transferAccount.AccountNumber);
                     break;
 
-                Console.WriteLine("Transfer completed, " + amount + "kr was sent from " + acc.AccountNumber
-                    + " to account number " + transferAccount.AccountNumber);
-                _accountList.Add(acc);
-                _accountList.Add(transferAccount);
+                    Console.WriteLine("Transfer completed, " + amount + "kr was sent from " + acc.AccountNumber
+                        + " to account number " + transferAccount.AccountNumber);
+                    _accountList.Add(acc);
+                    _accountList.Add(transferAccount);
             }
             Console.WriteLine("Account: " + acc.AccountNumber + "Current balance is: " + acc.Balance + " kr");
             _accountList.Add(acc);
@@ -223,3 +246,6 @@ namespace Bank.Library.DatabaseHandler
         //}
     }
 }
+
+
+
