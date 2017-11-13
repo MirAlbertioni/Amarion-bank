@@ -125,11 +125,93 @@ namespace Bank.Library.DatabaseHandler
 
         public static void DeleteAccount()
         {
+            Console.Clear();
+            Console.Write("Inpute customer Id for the account you want to delete: ");
+            var userInput = Console.ReadLine();
+
+            var account = _accountList.Where(x => x.AccountNumber == Convert.ToInt32(userInput)).FirstOrDefault();
+            if (account == null)
+            {
+                Console.WriteLine("Input is wrong or The account doesn't exist, Press enter to continue.");
+                Console.ReadLine();
+                DeleteAccount();
+            }
+            if (account.Balance == 0)
+            {
+                _accountList.Remove(account);
+                SaveNewFile.WhenChangesCreateNewFile();
+            }
+            else
+            {
+                Console.WriteLine("Account has balance, cannot remove, Press enter to continue.");
+                Console.ReadLine();
+                DeleteAccount();
+            }
 
         }
 
         public static void Transactions(string input)
         {
+            Console.Clear();
+            Console.Write("Type in account number to login:");
+            var userInput = Console.ReadLine();
+            Console.Clear();
+
+            var acc = _accountList.SingleOrDefault(x => x.AccountNumber == Convert.ToInt32(userInput));
+
+            Console.WriteLine("Accounts: " + acc.AccountNumber + "\n" + "Balance: " + acc.Balance + "kr");
+             
+            switch (input)
+            {
+                case "0":
+                    SaveNewFile.WhenChangesCreateNewFile();
+                    break;
+                case "1":
+                    Console.WriteLine("Enter amount for withdrawal");
+                    var withdraw = Convert.ToDecimal(Console.ReadLine());
+                    acc.Balance = acc.Balance - withdraw;
+                    Console.Clear();
+                    break;
+                case "2":
+                    Console.WriteLine("Enter amount you wish to insert");
+                    var insert = Convert.ToDecimal(Console.ReadLine());
+                    acc.Balance = acc.Balance + insert;
+                    Console.Clear();
+                    break;
+                case "3":
+                    var user = _accountList.SingleOrDefault(x => x.AccountNumber == Convert.ToInt32(userInput));
+                    Console.WriteLine("Transfer to account number?");
+                    var transferInput = Console.ReadLine();
+                    var transferAccount = _accountList.SingleOrDefault(x => x.AccountNumber == Convert.ToInt32(transferInput));
+                    decimal amount = 0m;
+                    Console.WriteLine("From what account do you want to transfer?");
+                    var yourAccInput = Convert.ToInt32(Console.ReadLine());
+                    if (yourAccInput == acc.AccountNumber)
+                    {
+                        Console.WriteLine("Enter amount you wish to transfer?");
+                        amount = Convert.ToDecimal(Console.ReadLine());
+                        if (acc.Balance > amount)
+                        {
+                            acc.Balance = acc.Balance - amount;
+                            transferAccount.Balance = transferAccount.Balance + amount;
+                        }
+                        else
+                        {
+                            Console.WriteLine("This account have not enough money to do this Transaction, press any key to try agine");
+                        }
+                    }
+                    Console.WriteLine("Transfer completed, " + amount + "kr was sent from " + acc.AccountNumber
+                        + " to account number " + transferAccount.AccountNumber);
+                    break;
+
+                Console.WriteLine("Transfer completed, " + amount + "kr was sent from " + acc.AccountNumber
+                    + " to account number " + transferAccount.AccountNumber);
+                _accountList.Add(acc);
+                _accountList.Add(transferAccount);
+            }
+            Console.WriteLine("Account: " + acc.AccountNumber + "Current balance is: " + acc.Balance + " kr");
+            _accountList.Add(acc);
+            SaveNewFile.WhenChangesCreateNewFile();
 
         }
 
