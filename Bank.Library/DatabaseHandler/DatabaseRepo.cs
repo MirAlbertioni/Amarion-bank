@@ -225,13 +225,22 @@ namespace Bank.Library.DatabaseHandler
         public static void Transactions(string input)
         {
             Console.Clear();
-            Console.Write("Type in account number to login:");
+            Console.Write("Type in id number to login:");
             var userInput = Console.ReadLine();
             Console.Clear();
+            Account acc = null;
+            var userAccount = _customerList.SingleOrDefault(user => user.Id == Int32.Parse(userInput));
+            var accounts = _accountList.Where(x => x.CustomerId == userAccount.Id).ToList();
+            Console.WriteLine("Customer Id: " + userAccount.Id + " has " + accounts.Capacity + " accounts: ");
 
-            var acc = _accountList.SingleOrDefault(x => x.AccountNumber == Convert.ToInt32(userInput));
+            foreach (var item in accounts)
+            {
+                Console.WriteLine("Account: " + item.AccountNumber + " has Balance: " + item.Balance + "kr");
+            }
 
-            Console.WriteLine("Accounts: " + acc.AccountNumber + "\n" + "Balance: " + acc.Balance + "kr");
+            Console.WriteLine("Choose one of above accounts");
+            var accountInput = Int32.Parse(Console.ReadLine());
+            acc = accounts.SingleOrDefault(x => x.AccountNumber == accountInput);
 
             switch (input)
             {
@@ -240,8 +249,8 @@ namespace Bank.Library.DatabaseHandler
                     break;
                 case "1":
                     Console.WriteLine("Enter amount for withdrawal");
-                    var withdraw = Convert.ToDecimal(Console.ReadLine());
-                    acc.Balance = acc.Balance - withdraw;
+                    var withdrawAmount = Convert.ToDecimal(Console.ReadLine());
+                    acc.Balance = acc.Balance - withdrawAmount;
                     Console.Clear();
                     break;
                 case "2":
@@ -251,48 +260,55 @@ namespace Bank.Library.DatabaseHandler
                     Console.Clear();
                     break;
                 case "3":
-                    var user = _accountList.SingleOrDefault(x => x.AccountNumber == Convert.ToInt32(userInput));
-                    Console.WriteLine("Transfer to account number?");
-                    var transferInput = Console.ReadLine();
-                    var transferAccount = _accountList.SingleOrDefault(x => x.AccountNumber == Convert.ToInt32(transferInput));
+                    bool checkLoop = true;
                     decimal amount = 0m;
-                    Console.WriteLine("From what account do you want to transfer?");
-                    var yourAccInput = Convert.ToInt32(Console.ReadLine());
-                    if (yourAccInput == acc.AccountNumber)
+                    var transferInput = 0;
+                    Account transferAccount = null;
+                    while (checkLoop)
                     {
-                        Console.WriteLine("Enter amount you wish to transfer?");
-                        amount = Convert.ToDecimal(Console.ReadLine());
-                        if (acc.Balance > amount)
+                        Console.WriteLine("Transfer to account number?");
+                        transferInput = Convert.ToInt32(Console.ReadLine());
+                        transferAccount = accounts.SingleOrDefault(x => x.AccountNumber == transferInput);
+                        if (transferAccount != acc)
                         {
-                            acc.Balance = acc.Balance - amount;
-                            transferAccount.Balance = transferAccount.Balance + amount;
+                            Console.WriteLine("Enter amount you wish to transfer?");
+                            amount = Convert.ToDecimal(Console.ReadLine());
+                            checkLoop = false;
+                            if (acc.Balance > amount)
+                            {
+                                acc.Balance = acc.Balance - amount;
+                                transferAccount.Balance = transferAccount.Balance + amount;
+                                _accountList.Add(transferAccount);
+                                checkLoop = false;
+                            }
+                            else
+                            {
+                                Console.WriteLine("This account have not enough money to do this Transaction, press any key to try agine");
+                                checkLoop = true;
+                            }
                         }
                         else
                         {
-                            Console.WriteLine("This account have not enough money to do this Transaction, press any key to try agine");
+                            Console.WriteLine("The transaction should be between two different accounts");
+                            checkLoop = true;
                         }
                     }
                     Console.WriteLine("Transfer completed, " + amount + "kr was sent from " + acc.AccountNumber
                         + " to account number " + transferAccount.AccountNumber);
                     break;
-
-                    Console.WriteLine("Transfer completed, " + amount + "kr was sent from " + acc.AccountNumber
-                        + " to account number " + transferAccount.AccountNumber);
-                    _accountList.Add(acc);
-                    _accountList.Add(transferAccount);
             }
-            Console.WriteLine("Account: " + acc.AccountNumber + "Current balance is: " + acc.Balance + " kr");
-            _accountList.Add(acc);
+
+            Console.Clear();
+            Console.WriteLine("Customer Id: " + userAccount.Id + "Current balance is:");
+            foreach (var item in accounts)
+            {
+                Console.WriteLine("Account: " + item.AccountNumber + " has Balance: " + item.Balance + "kr");
+            }
+
+            if (acc != null)
+                _accountList.Add(acc);
             SaveNewFile.WhenChangesCreateNewFile();
-
         }
-
-        //public static void BackToMenu()
-        //{
-        //    Console.Clear();
-        //    MainMenu.ShowMenu();
-        //    Console.ReadLine();
-        //}
     }
 }
 
