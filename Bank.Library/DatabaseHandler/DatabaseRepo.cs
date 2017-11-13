@@ -137,7 +137,7 @@ namespace Bank.Library.DatabaseHandler
 
                     if (inp == "9") MainMenu.ShowMenu();
 
-                    else DatabaseRepo.DeleteCustomer();
+                    else DeleteCustomer();
                 }
                 else
                 {
@@ -151,7 +151,7 @@ namespace Bank.Library.DatabaseHandler
 
                             if (inp == "9") MainMenu.ShowMenu();
 
-                            else DatabaseRepo.DeleteCustomer();
+                            else DeleteCustomer();
                         }
                         else
                             _accountList.Remove(item);
@@ -168,13 +168,7 @@ namespace Bank.Library.DatabaseHandler
                         Console.WriteLine("Custemer account  balance is not null. Press enter to try again or press 9 to go back to Menu");
                         Console.ReadLine();
                     }
-                    
-                  
-
-                   
-                
-                 
-                    
+                                        
                 }
 
             }
@@ -184,36 +178,38 @@ namespace Bank.Library.DatabaseHandler
 
                 if (inp == "9") MainMenu.ShowMenu();
 
-                else DatabaseRepo.DeleteCustomer(); ;
+                else DeleteCustomer();
             }
 
-            //foreach (var item in _accountList.ToList())
-            //{
-            //    foreach (var c in _customerList.ToList())
-            //    {
-            //        if (Convert.ToInt32(userInput) == c.Id && item.CustomerId == c.Id)
-            //        {
-            //            if (item.Balance > 0)
-            //            {
-            //                Console.WriteLine("Account has balance, cannot remove");
-            //            }
-            //            else
-            //            {
-            //                item.CustomerId = c.Id;
-            //                var acc = item;
-            //                _accountList.Remove(acc);
-            //                _customerList.Remove(c);
-            //                SaveNewFile.WhenChangesCreateNewFile();
-            //            }
-            //        }
-            //    }
-            //}
             GoBackToMenu();
         }
 
         public static void CreateNewAccount()
         {
             //Skapa account för en kund som finns
+            Console.Clear();
+            Console.WriteLine("*Create new Account*\n");
+            Console.Write("Enter Customer Id: ");
+            var userInput =  Convert.ToInt32(Console.ReadLine().Trim());
+
+            var customer = _customerList.FirstOrDefault(i => i.Id == userInput);
+            var accounts = _accountList.Where(i => i.CustomerId == userInput);
+
+            var newAccId = accounts.Last().AccountNumber;
+            newAccId++;
+            var account = new Account
+            {
+                CustomerId = customer.Id,
+                AccountNumber = newAccId,
+                Balance = 0
+            };
+            _accountList.Add(account);
+
+            Console.WriteLine(customer.Name + ", Your new account has been created! ");
+            Console.WriteLine("Account number: "+ accounts.Last().AccountNumber +" Balance: " + accounts.Last().Balance );
+            Console.WriteLine("Press key for Menu.");
+            Console.ReadLine();
+            MainMenu.ShowMenu();
         }
 
         public static void DeleteAccount()
