@@ -41,6 +41,11 @@ namespace Bank.Library.Menus
                 DatabaseRepo.SaveCustomerToFile();
             }
 
+            else if (userInput == "6")
+            {
+                DatabaseRepo.DeleteAccount();
+            }
+
             else if (userInput == "7")
             {
                 AccountMenu.ShowAccountMenu();
