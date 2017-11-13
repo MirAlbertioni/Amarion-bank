@@ -116,14 +116,11 @@ namespace Bank.Library.DatabaseHandler
 
         public static void SaveCustomerToFile()
         {
+            Console.Clear();
+            Console.WriteLine("Create new customer\n");
+            
             Console.WriteLine("Organisation number: ");
-            var orgNr = Console.ReadLine();
-            int num = -1;
-            if (!int.TryParse(orgNr, out num) || string.IsNullOrWhiteSpace(orgNr) || orgNr.Count() <= 3)
-            {
-                Console.WriteLine("Organisation number is missing.. please try again");
-            }
-
+            var orgNr = Console.ReadLine();     
             Console.WriteLine("Name: ");
             var name = Console.ReadLine();
             Console.WriteLine("Adress: ");
@@ -155,6 +152,15 @@ namespace Bank.Library.DatabaseHandler
                 };
                 _customerList.Add(newCustomer);
 
+            var newAccId = _accountList.Last().AccountNumber;
+            newAccId++;
+            var account = new Account
+            {
+                CustomerId = newCustomer.Id,
+                AccountNumber = newAccId,
+                Balance = 0
+            };
+            _accountList.Add(account);
             SaveNewFile.WhenChangesCreateNewFile();
 
 

@@ -36,11 +36,17 @@ namespace Bank.Library.Menus
                 DatabaseRepo.ShowCustomerReport();
             }
 
+            else if (userInput == "3")
+            {
+                DatabaseRepo.SaveCustomerToFile();
+            }
 
             else if (userInput == "7")
             {
                 AccountMenu.ShowAccountMenu();
             }
+
+
 
         }
     }
