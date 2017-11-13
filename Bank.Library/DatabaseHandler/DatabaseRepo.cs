@@ -114,7 +114,7 @@ namespace Bank.Library.DatabaseHandler
             Console.ReadLine();
         }
 
-        public static void SaveCustomerToFile()
+        public static void CreateNewCustomer()
         {
             CustomerHandler.CreateNewCustomer();
             GoBackToMenu();
@@ -147,6 +147,11 @@ namespace Bank.Library.DatabaseHandler
                     }
                 }
             }
+        }
+
+        public static void CreateNewAccount()
+        {
+            //Skapa account för en kund som finns
         }
 
         public static void DeleteAccount()
@@ -198,9 +203,6 @@ namespace Bank.Library.DatabaseHandler
 
             switch (input)
             {
-                case "0":
-                    SaveNewFile.WhenChangesCreateNewFile();
-                    break;
                 case "1":
                     Console.WriteLine("Enter amount for withdrawal");
                     var withdrawAmount = Convert.ToDecimal(Console.ReadLine());
@@ -261,7 +263,7 @@ namespace Bank.Library.DatabaseHandler
 
             if (acc != null)
                 _accountList.Add(acc);
-            SaveNewFile.WhenChangesCreateNewFile();
+            GoBackToMenu();
         }
     }
 }
