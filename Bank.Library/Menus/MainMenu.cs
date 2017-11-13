@@ -20,7 +20,10 @@ namespace Bank.Library.Menus
                 "5) Create new account \n " +
                 "6) Delete account \n " +
                 "7) Account overview \n " +
-                "\n 9) Back to menu\n" );
+                "\n 9) Back to menu\n\n\n" );
+
+            DatabaseRepo.ShowStats();
+
 
             var userInput = Console.ReadLine();
             if (userInput == "0")
