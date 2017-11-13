@@ -9,8 +9,4 @@
     <ProjectReference Include="..\Bank.Library\Bank.Library.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="text\" />
-  </ItemGroup>
-
 </Project>
