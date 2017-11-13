@@ -1,0 +1,48 @@
+Exempel på hur programmets gränssnitt
+C:\Bank> BankApp.exe bankdata.txt
+******************************
+* VÄLKOMMEN TILL BANKAPP 1.0 *
+******************************
+Läser in bankdata.txt...
+Antal kunder: 123
+Antal konton: 1234
+Totalt saldo: 123456789.00
+HUVUDMENY
+0) Avsluta och spara
+1) Sök kund
+2) Visa kundbild
+3) Skapa kund
+4) Ta bort kund
+5) Skapa konto
+6) Ta bort konto
+8) Insättning
+8) Uttag
+9) Överföring
+> 1
+* Sök kund *
+Namn eller postort? eri
+1234: Telefonaktiebolaget Ericsson
+4567: Eriks Bageri AB
+> 2
+* Visa kundbild *
+Kundnummer? 1234
+Kundnummer: 1234
+Organisationsnummer: 556016-0680
+Namn: Telefonaktiebolaget Ericsson
+Adress: TORSHAMNSGATAN 21, 164 40 Kista
+Konton
+12345: 123 456 789,00 kr
+12346: 123 456 789,00 kr
+12347: 123 456 789,00 kr
+> 9
+* Överföring *
+Från? 12345
+Till? 12346
+Belopp? 1000
+1 000,00 kr överfört från konto 12345 till 12346.
+> 0
+* Avsluta och spara *
+Sparar till 20171231-2359.txt...
+Antal kunder: 123
+Antal konton: 1234
+Totalt saldo: 123456789.00
