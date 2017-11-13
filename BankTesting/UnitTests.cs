@@ -15,6 +15,7 @@ namespace BankTesting
             var custListIdLast = customerList.Select(x => x.Id).Last();
             Assert.Equal("1091", custListIdLast.ToString());
             
+            
         }
         [Fact]
         public void SearchAccount()

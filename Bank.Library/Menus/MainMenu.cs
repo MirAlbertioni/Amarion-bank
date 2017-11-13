@@ -40,6 +40,10 @@ namespace Bank.Library.Menus
             {
                 DatabaseRepo.SaveCustomerToFile();
             }
+            else if (userInput == "4")
+            {
+                DatabaseRepo.DeleteCustomer();
+            }
 
             else if (userInput == "7")
             {
