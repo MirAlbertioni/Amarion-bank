@@ -118,39 +118,110 @@ namespace Bank.Library.DatabaseHandler
         {
             Console.Clear();
             Console.WriteLine("Create new customer\n");
-            
-            Console.WriteLine("Organisation number: ");
-            var orgNr = Console.ReadLine();     
-            Console.WriteLine("Name: ");
-            var name = Console.ReadLine();
-            Console.WriteLine("Adress: ");
-            var adress = Console.ReadLine();
-            Console.WriteLine("AreaCode: ");
-            var areaCode = Console.ReadLine();
-            Console.WriteLine("City: ");
-            var city = Console.ReadLine();
-            Console.WriteLine("Region: ");
-            var region = Console.ReadLine();
-            Console.WriteLine("Country: ");
-            var country = Console.ReadLine();
-            Console.WriteLine("Phone: ");
-            var phone = Console.ReadLine();
 
-                var newId = _customerList.Last().Id;
-                newId++;
-                var newCustomer = new Customer
+            string inputOrgnr;
+            while (true)
+            {
+                Console.WriteLine("Organisation number: ");
+                inputOrgnr = Console.ReadLine();
+                if (!string.IsNullOrWhiteSpace(inputOrgnr))
                 {
-                    Id = newId,
-                    OrgNumber = orgNr,
-                    Name = name,
-                    Adress = adress,
-                    AreaCode = areaCode,
-                    City = city,
-                    Region = region,
-                    Country = country,
-                    Phone = phone
-                };
-                _customerList.Add(newCustomer);
+                    break;
+                }
+            }
+
+            string inputName;
+            while (true)
+            {
+                Console.WriteLine("Name: ");
+                inputName = Console.ReadLine();
+                if (!string.IsNullOrWhiteSpace(inputName))
+                {
+                    break;
+                }
+            }
+
+            string inputAdress;
+            while (true)
+            {
+                Console.WriteLine("Adress: ");
+                inputAdress = Console.ReadLine();
+                if (!string.IsNullOrWhiteSpace(inputAdress))
+                {
+                    break;
+                }
+            }
+
+            string inputAreacode;
+            while (true)
+            {
+                Console.WriteLine("AreaCode: ");
+                inputAreacode = Console.ReadLine();
+                if (!string.IsNullOrWhiteSpace(inputAreacode))
+                {
+                    break;
+                }
+            }
+
+            string inputCity;
+            while (true)
+            {
+                Console.WriteLine("City: ");
+                inputCity = Console.ReadLine();
+                if (!string.IsNullOrWhiteSpace(inputCity))
+                {
+                    break;
+                }
+            }
+
+            string inputRegion;
+            while (true)
+            {
+                Console.WriteLine("Region: ");
+                inputRegion = Console.ReadLine();
+                if (!string.IsNullOrWhiteSpace(inputRegion))
+                {
+                    break;
+                }
+            }
+
+            string inputCountry;
+            while (true)
+            {
+                Console.WriteLine("Country: ");
+                inputCountry = Console.ReadLine();
+                if (!string.IsNullOrWhiteSpace(inputCountry))
+                {
+                    break;
+                }
+            }
+
+            string inputPhone;
+            while (true)
+            {
+                Console.WriteLine("Phone: ");
+                inputPhone = Console.ReadLine();
+                if (!string.IsNullOrWhiteSpace(inputPhone))
+                {
+                    break;
+                }
+            }
+
+            var newId = _customerList.Last().Id;
+            newId++;
+            var newCustomer = new Customer
+            {
+                Id = newId,
+                OrgNumber = inputOrgnr,
+                Name = inputName,
+                Adress = inputAdress,
+                AreaCode = inputAreacode,
+                City = inputCity,
+                Region = inputRegion,
+                Country = inputCountry,
+                Phone = inputPhone
+            };
+            _customerList.Add(newCustomer);
 
             var newAccId = _accountList.Last().AccountNumber;
             newAccId++;
@@ -161,9 +232,12 @@ namespace Bank.Library.DatabaseHandler
                 Balance = 0
             };
             _accountList.Add(account);
-            SaveNewFile.WhenChangesCreateNewFile();
-
-
+            Console.Clear();
+            Console.WriteLine("Customer info\n" + newCustomer.Id + "\n" + newCustomer.OrgNumber + "\n" + newCustomer.Name + "\n" + newCustomer.Adress + "\n"
+                + newCustomer.AreaCode + "\n" + newCustomer.City + "\n" + newCustomer.Region + "\n" + newCustomer.Country + "\n" + newCustomer.Phone + "\n\n\n" +
+                "Account info" + "\n" + account.AccountNumber + "\n" + account.CustomerId + "\n" + account.Balance + "KR" + "\n\n");
+            Console.ReadLine();
+            MainMenu.ShowMenu();
         }
 
         public static void DeleteCustomer()
