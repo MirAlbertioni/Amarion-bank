@@ -16,5 +16,15 @@ namespace BankTesting
             Assert.Equal("1091", custListIdLast.ToString());
             
         }
+        [Fact]
+        public void SearchAccount()
+        {
+            //Search Account
+            ReadFile.ReadFromTxtFile();
+            var accountList = DatabaseRepo.Accounts;
+            var AccountFirst = accountList.Select(x => x.AccountNumber).First();
+            Assert.Equal("13001", AccountFirst.ToString());
+
+        }
     }
 }
