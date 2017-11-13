@@ -234,7 +234,9 @@ namespace Bank.Library.DatabaseHandler
                         if (transferAccount != acc)
                         {
                             Console.WriteLine("Enter amount you wish to transfer?");
-                            amount = Convert.ToDecimal(Console.ReadLine());
+                            var transferAmount = Console.ReadLine();
+                            var transferReplace = transferAmount.Replace(".", ",");
+                            var transferParsedSucced = decimal.TryParse(transferReplace, NumberStyles.Currency, new CultureInfo("sv-SE"), out amount);
                             checkLoop = false;
                             if (acc.Balance > amount)
                             {
