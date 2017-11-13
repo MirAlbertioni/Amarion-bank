@@ -219,36 +219,45 @@ namespace Bank.Library.DatabaseHandler
         public static void DeleteAccount()
         {
             Console.Clear();
-            Console.Write("Input customer Id to view accounts: ");//     for the account you want to delete: ");
-            var userInput = Convert.ToInt32(Console.ReadLine());
-            var accounts = _accountList.Where(i => i.CustomerId == userInput).ToList();
+            Console.Write("Input customer Id to view accounts: ");
+            var userInput = Console.ReadLine().Trim(); ;
+            int intCheck;
+            var accNum = int.TryParse(userInput, out intCheck);
 
-            foreach (var item in accounts)
+            if (accNum)
             {
-                Console.WriteLine("Account number :" + item.AccountNumber + " balance: " + item.Balance);
-            }
-         
+                var accounts = _accountList.Where(i => i.CustomerId == intCheck).ToList();
 
+                foreach (var item in accounts)
+                {
+                    Console.WriteLine("Account number :" + item.AccountNumber + " balance: " + item.Balance);
+                }
 
-            var account = _accountList.FirstOrDefault(x => x.CustomerId == userInput);
-            if (account == null)
-            {
-                Console.WriteLine("Input is wrong or The account doesn't exist, Press enter to continue.");
-                Console.ReadLine();
-                DeleteAccount();
-            }
-            if (account.Balance == 0)
-            {
-                _accountList.Remove(account);
+                var account = _accountList.FirstOrDefault(x => x.CustomerId == intCheck);
+                if (account == null)
+                {
+                    Console.WriteLine("Input is wrong or The account doesn't exist, Press enter to continue.");
+                    Console.ReadLine();
+                    DeleteAccount();
+                }
+                if (account.Balance == 0)
+                {
+                    _accountList.Remove(account);
+                }
+                else
+                {
+                    Console.WriteLine("\nAccount has balance, cannot remove, Press enter to continue.");
+                    GoBackToMenu();
+
+                    DeleteAccount();
+                }
             }
             else
             {
-                Console.WriteLine("\nAccount has balance, cannot remove, Press enter to continue.");
-                GoBackToMenu();
-
+                Console.WriteLine("Wrong format.. Use numbers.. Press enter to try again");
+                Console.ReadLine();
                 DeleteAccount();
             }
-
             GoBackToMenu();
 
         }
