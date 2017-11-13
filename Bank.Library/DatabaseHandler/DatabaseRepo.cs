@@ -123,30 +123,92 @@ namespace Bank.Library.DatabaseHandler
         public static void DeleteCustomer()
         {
             Console.Clear();
-            Console.Write("Input customer Id for the account you want to delete: ");
+            Console.Write("Input customer Id  you want to delete: ");
             var userInput = Console.ReadLine();
-
-            foreach (var item in _accountList.ToList())
+          int ParseduserInput;
+                        var id =int.TryParse( userInput,out ParseduserInput);
+            if (id)
             {
-                foreach (var c in _customerList.ToList())
+                var CustemerToDelete = _customerList.FirstOrDefault(c => c.Id == ParseduserInput);
+                if (CustemerToDelete == null)
                 {
-                    if (Convert.ToInt32(userInput) == c.Id && item.CustomerId == c.Id)
+                    Console.WriteLine("Can't find any customer with your input. Press enter to try again or press 9 to go back to Menu");
+                    var inp = Console.ReadLine();
+
+                    if (inp == "9") MainMenu.ShowMenu();
+
+                    else DatabaseRepo.DeleteCustomer();
+                }
+                else
+                {
+                    var AccountToDelet = _accountList.Where(a => a.CustomerId == ParseduserInput).ToList();
+                    foreach (var item in AccountToDelet)
                     {
-                        if (item.Balance > 0)
+                        if (item.Balance!=0)
                         {
-                            Console.WriteLine("Account has balance, cannot remove");
+                            Console.WriteLine("Custemer account  balance is not null. Press enter to try again or press 9 to go back to Menu");
+                            var inp = Console.ReadLine();
+
+                            if (inp == "9") MainMenu.ShowMenu();
+
+                            else DatabaseRepo.DeleteCustomer();
                         }
                         else
-                        {
-                            item.CustomerId = c.Id;
-                            var acc = item;
-                            _accountList.Remove(acc);
-                            _customerList.Remove(c);
-                            SaveNewFile.WhenChangesCreateNewFile();
-                        }
+                            _accountList.Remove(item);
+
+                       
                     }
+                    var accountCheck = _accountList.Where(z => z.CustomerId == ParseduserInput).ToList().Count();
+                    if (accountCheck == 0)
+                    {
+                        _customerList.Remove(CustemerToDelete);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Custemer account  balance is not null. Press enter to try again or press 9 to go back to Menu");
+                        Console.ReadLine();
+                    }
+                    
+                  
+
+                   
+                
+                 
+                    
                 }
+
             }
+            else {
+                Console.WriteLine("CustemerId muste be a number. Press enter to try again or press 9 to go back to Menu");
+                var inp = Console.ReadLine();
+
+                if (inp == "9") MainMenu.ShowMenu();
+
+                else DatabaseRepo.DeleteCustomer(); ;
+            }
+
+            //foreach (var item in _accountList.ToList())
+            //{
+            //    foreach (var c in _customerList.ToList())
+            //    {
+            //        if (Convert.ToInt32(userInput) == c.Id && item.CustomerId == c.Id)
+            //        {
+            //            if (item.Balance > 0)
+            //            {
+            //                Console.WriteLine("Account has balance, cannot remove");
+            //            }
+            //            else
+            //            {
+            //                item.CustomerId = c.Id;
+            //                var acc = item;
+            //                _accountList.Remove(acc);
+            //                _customerList.Remove(c);
+            //                SaveNewFile.WhenChangesCreateNewFile();
+            //            }
+            //        }
+            //    }
+            //}
+            GoBackToMenu();
         }
 
         public static void CreateNewAccount()
