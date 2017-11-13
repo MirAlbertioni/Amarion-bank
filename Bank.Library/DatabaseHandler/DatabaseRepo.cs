@@ -2,6 +2,8 @@
 using Bank.Library.Models;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -114,7 +116,48 @@ namespace Bank.Library.DatabaseHandler
 
         public static void SaveCustomerToFile()
         {
-                
+            Console.WriteLine("Organisation number: ");
+            var orgNr = Console.ReadLine();
+            int num = -1;
+            if (!int.TryParse(orgNr, out num) || string.IsNullOrWhiteSpace(orgNr) || orgNr.Count() <= 3)
+            {
+                Console.WriteLine("Organisation number is missing.. please try again");
+            }
+
+            Console.WriteLine("Name: ");
+            var name = Console.ReadLine();
+            Console.WriteLine("Adress: ");
+            var adress = Console.ReadLine();
+            Console.WriteLine("AreaCode: ");
+            var areaCode = Console.ReadLine();
+            Console.WriteLine("City: ");
+            var city = Console.ReadLine();
+            Console.WriteLine("Region: ");
+            var region = Console.ReadLine();
+            Console.WriteLine("Country: ");
+            var country = Console.ReadLine();
+            Console.WriteLine("Phone: ");
+            var phone = Console.ReadLine();
+
+                var newId = _customerList.Last().Id;
+                newId++;
+                var newCustomer = new Customer
+                {
+                    Id = newId,
+                    OrgNumber = orgNr,
+                    Name = name,
+                    Adress = adress,
+                    AreaCode = areaCode,
+                    City = city,
+                    Region = region,
+                    Country = country,
+                    Phone = phone
+                };
+                _customerList.Add(newCustomer);
+
+            SaveNewFile.WhenChangesCreateNewFile();
+
+
         }
 
         public static void DeleteCustomer()
