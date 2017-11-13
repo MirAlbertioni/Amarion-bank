@@ -157,10 +157,18 @@ namespace Bank.Library.DatabaseHandler
         public static void DeleteAccount()
         {
             Console.Clear();
-            Console.Write("Inpute customer Id for the account you want to delete: ");
-            var userInput = Console.ReadLine();
+            Console.Write("Input customer Id to view accounts: ");//     for the account you want to delete: ");
+            var userInput = Convert.ToInt32(Console.ReadLine());
+            var accounts = _accountList.Where(i => i.CustomerId == userInput).ToList();
 
-            var account = _accountList.Where(x => x.AccountNumber == Convert.ToInt32(userInput)).FirstOrDefault();
+            foreach (var item in accounts)
+            {
+                Console.WriteLine("Account number :" + item.AccountNumber + " balance: " + item.Balance);
+            }
+         
+
+
+            var account = _accountList.FirstOrDefault(x => x.CustomerId == userInput);
             if (account == null)
             {
                 Console.WriteLine("Input is wrong or The account doesn't exist, Press enter to continue.");
@@ -170,14 +178,16 @@ namespace Bank.Library.DatabaseHandler
             if (account.Balance == 0)
             {
                 _accountList.Remove(account);
-                SaveNewFile.WhenChangesCreateNewFile();
             }
             else
             {
-                Console.WriteLine("Account has balance, cannot remove, Press enter to continue.");
-                Console.ReadLine();
+                Console.WriteLine("\nAccount has balance, cannot remove, Press enter to continue.");
+                GoBackToMenu();
+
                 DeleteAccount();
             }
+
+            GoBackToMenu();
 
         }
 
