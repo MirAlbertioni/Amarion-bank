@@ -188,7 +188,7 @@ namespace Bank.Library.DatabaseHandler
         public static void CreateNewAccount()
         {
             //Skapa ett nytt konto för existerande kund
-
+            //ta bort denna rad ---->
             Console.Clear();
             Console.WriteLine("*Create new Account*\n");
             Console.Write("Enter Customer Id: ");
