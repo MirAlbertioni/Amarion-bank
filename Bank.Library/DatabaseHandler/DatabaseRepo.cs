@@ -114,56 +114,10 @@ namespace Bank.Library.DatabaseHandler
             Console.ReadLine();
         }
 
-        public static void SaveCustomerToFile()
+        public static void CreateNewCustomer()
         {
-            Console.Clear();
-            Console.WriteLine("Create new customer\n");
-            
-            Console.WriteLine("Organisation number: ");
-            var orgNr = Console.ReadLine();     
-            Console.WriteLine("Name: ");
-            var name = Console.ReadLine();
-            Console.WriteLine("Adress: ");
-            var adress = Console.ReadLine();
-            Console.WriteLine("AreaCode: ");
-            var areaCode = Console.ReadLine();
-            Console.WriteLine("City: ");
-            var city = Console.ReadLine();
-            Console.WriteLine("Region: ");
-            var region = Console.ReadLine();
-            Console.WriteLine("Country: ");
-            var country = Console.ReadLine();
-            Console.WriteLine("Phone: ");
-            var phone = Console.ReadLine();
-
-                var newId = _customerList.Last().Id;
-                newId++;
-                var newCustomer = new Customer
-                {
-                    Id = newId,
-                    OrgNumber = orgNr,
-                    Name = name,
-                    Adress = adress,
-                    AreaCode = areaCode,
-                    City = city,
-                    Region = region,
-                    Country = country,
-                    Phone = phone
-                };
-                _customerList.Add(newCustomer);
-
-            var newAccId = _accountList.Last().AccountNumber;
-            newAccId++;
-            var account = new Account
-            {
-                CustomerId = newCustomer.Id,
-                AccountNumber = newAccId,
-                Balance = 0
-            };
-            _accountList.Add(account);
-            SaveNewFile.WhenChangesCreateNewFile();
-
-
+            CustomerHandler.CreateNewCustomer();
+            GoBackToMenu();
         }
 
         public static void DeleteCustomer()
@@ -193,6 +147,11 @@ namespace Bank.Library.DatabaseHandler
                     }
                 }
             }
+        }
+
+        public static void CreateNewAccount()
+        {
+            //Skapa account för en kund som finns
         }
 
         public static void DeleteAccount()
@@ -244,19 +203,22 @@ namespace Bank.Library.DatabaseHandler
 
             switch (input)
             {
-                case "0":
-                    SaveNewFile.WhenChangesCreateNewFile();
-                    break;
                 case "1":
                     Console.WriteLine("Enter amount for withdrawal");
-                    var withdrawAmount = Convert.ToDecimal(Console.ReadLine());
-                    acc.Balance = acc.Balance - withdrawAmount;
+                    var withdrawAmount = Console.ReadLine();
+                    var amountReplace = withdrawAmount.Replace(".", ",");
+                    decimal newWithdrawAmount;
+                    var withdrawParsedSucced = decimal.TryParse(amountReplace, NumberStyles.Currency, new CultureInfo("sv-SE"), out newWithdrawAmount);
+                    acc.Balance = acc.Balance - newWithdrawAmount;
                     Console.Clear();
                     break;
                 case "2":
                     Console.WriteLine("Enter amount you wish to insert");
-                    var insert = Convert.ToDecimal(Console.ReadLine());
-                    acc.Balance = acc.Balance + insert;
+                    var insert = Console.ReadLine();
+                    var insertReplace = insert.Replace(".", ",");
+                    decimal newInsertAmount;
+                    var insertParsedSucced = decimal.TryParse(insertReplace, NumberStyles.Currency, new CultureInfo("sv-SE"), out newInsertAmount);
+                    acc.Balance = acc.Balance + newInsertAmount;
                     Console.Clear();
                     break;
                 case "3":
@@ -272,7 +234,9 @@ namespace Bank.Library.DatabaseHandler
                         if (transferAccount != acc)
                         {
                             Console.WriteLine("Enter amount you wish to transfer?");
-                            amount = Convert.ToDecimal(Console.ReadLine());
+                            var transferAmount = Console.ReadLine();
+                            var transferReplace = transferAmount.Replace(".", ",");
+                            var transferParsedSucced = decimal.TryParse(transferReplace, NumberStyles.Currency, new CultureInfo("sv-SE"), out amount);
                             checkLoop = false;
                             if (acc.Balance > amount)
                             {
@@ -307,7 +271,7 @@ namespace Bank.Library.DatabaseHandler
 
             if (acc != null)
                 _accountList.Add(acc);
-            SaveNewFile.WhenChangesCreateNewFile();
+            GoBackToMenu();
         }
     }
 }
