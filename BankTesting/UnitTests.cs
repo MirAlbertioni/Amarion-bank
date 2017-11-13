@@ -26,5 +26,17 @@ namespace BankTesting
             Assert.Equal("13001", AccountFirst.ToString());
 
         }
+
+        [Fact]
+        public void Insert()
+        {
+            ReadFile.ReadFromTxtFile();
+            var acc = DatabaseRepo.Accounts;
+            var accId = acc.FirstOrDefault(x => x.AccountNumber == 13008);
+            decimal insertAmoun = 250.30M;
+            accId.Balance = accId.Balance + insertAmoun;
+
+            Assert.Equal("764,70", accId.Balance.ToString());
+        }
     }
 }
