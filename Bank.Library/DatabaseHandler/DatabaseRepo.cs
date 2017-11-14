@@ -165,7 +165,7 @@ namespace Bank.Library.DatabaseHandler
                     }
                     else
                     {
-                        Console.WriteLine("Custemer account  balance is not null. Press enter to try again or press 9 to go back to Menu");
+                        Console.WriteLine("Customer account  balance is not null. Press enter to try again or press 9 to go back to Menu");
                         Console.ReadLine();
                     }
 
