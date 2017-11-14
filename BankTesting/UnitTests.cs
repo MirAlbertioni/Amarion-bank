@@ -25,7 +25,6 @@ namespace BankTesting
             var accountList = DatabaseRepo.Accounts;
             var AccountFirst = accountList.Select(x => x.AccountNumber).First();
             Assert.Equal("13001", AccountFirst.ToString());
-
         }
 
         [Fact]
