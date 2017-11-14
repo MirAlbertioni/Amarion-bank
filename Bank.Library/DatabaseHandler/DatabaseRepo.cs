@@ -27,7 +27,6 @@ namespace Bank.Library.DatabaseHandler
             }
         }
 
-
         public static void ShowStats()
         {
             Console.WriteLine("Customers: " + _customerList.Count());
@@ -36,7 +35,6 @@ namespace Bank.Library.DatabaseHandler
         }
 
         public static void SearchCustomer()
-
         {
             Console.Clear();
             Console.WriteLine("Search for customer\n" + "You can use name or city.");
@@ -108,7 +106,6 @@ namespace Bank.Library.DatabaseHandler
                 if (inp == "9") MainMenu.ShowMenu();
 
                 else ShowCustomerReport();
-
             }
             GoBackToMenu();
             Console.ReadLine();
@@ -125,8 +122,7 @@ namespace Bank.Library.DatabaseHandler
             Console.Clear();
             Console.Write("Input customer Id  you want to delete: ");
             var userInput = Console.ReadLine();
-            int ParseduserInput;
-            var id = int.TryParse(userInput, out ParseduserInput);
+            var id = int.TryParse(userInput, out int ParseduserInput);
             if (id)
             {
                 var CustemerToDelete = _customerList.FirstOrDefault(c => c.Id == ParseduserInput);
@@ -153,25 +149,24 @@ namespace Bank.Library.DatabaseHandler
 
                             else DeleteCustomer();
                         }
-                        else
-                            _accountList.Remove(item);
-
-
+                        else _accountList.Remove(item);
                     }
+
                     var accountCheck = _accountList.Where(z => z.CustomerId == ParseduserInput).ToList().Count();
+
                     if (accountCheck == 0)
                     {
                         _customerList.Remove(CustemerToDelete);
                     }
+
                     else
                     {
                         Console.WriteLine("Customer account  balance is not null. Press enter to try again or press 9 to go back to Menu");
                         Console.ReadLine();
                     }
-
                 }
-
             }
+
             else
             {
                 Console.WriteLine("CustemerId muste be a number. Press enter to try again or press 9 to go back to Menu");
@@ -187,24 +182,19 @@ namespace Bank.Library.DatabaseHandler
 
         public static void CreateNewAccount()
         {
-            //Skapa ett nytt konto för existerande kund
-
             Console.Clear();
             Console.WriteLine("*Create new Account*\n");
             Console.Write("Enter Customer Id: ");
 
             var userInput = Console.ReadLine().Trim();
-            int intCheck;
-            var control = int.TryParse(userInput, out intCheck);
+            var control = int.TryParse(userInput, out int intCheck);
 
             if (control)
             {
                 var customer = _customerList.FirstOrDefault(i => i.Id == intCheck);
                 if (customer != null)
                 {
-                    var accounts = _accountList.Where(i => i.CustomerId == intCheck);
-
-                    var newAccId = accounts.Last().AccountNumber;
+                    var newAccId = _accountList.Last().AccountNumber;
                     newAccId++;
                     var account = new Account
                     {
@@ -215,22 +205,24 @@ namespace Bank.Library.DatabaseHandler
                     _accountList.Add(account);
 
                     Console.WriteLine(customer.Name + ", Your new account has been created! ");
-                    Console.WriteLine("Account number: " + accounts.Last().AccountNumber + " Balance: " + accounts.Last().Balance);
-                    Console.WriteLine("Press key for Menu.");
-                    Console.ReadLine();
-                    MainMenu.ShowMenu();
+                    Console.WriteLine("Account number: " + account.AccountNumber + " Balance: " + account.Balance);
                 }
 
-                else Console.WriteLine("No user found.. Please press key to try again");
-                Console.ReadKey();
-                CreateNewAccount();
+                else
+                {
+                    Console.WriteLine("No user found.. Please press key to try again");
+                    Console.ReadKey();
+                    CreateNewAccount();
+                }
             }
+
             else
             {
                 Console.WriteLine("Wrong format.. Use numbers.. Press enter to try again");
                 Console.ReadLine();
                 CreateNewAccount();
             }
+            GoBackToMenu();
         }
 
         public static void DeleteAccount()
@@ -241,8 +233,7 @@ namespace Bank.Library.DatabaseHandler
             Console.Write("Input customer Id to view accounts: ");
 
             var userInput = Console.ReadLine().Trim();
-            int intCheck;
-            var control = int.TryParse(userInput, out intCheck);
+            var control = int.TryParse(userInput, out int intCheck);
             var customer = _customerList.FirstOrDefault(x => x.Id == intCheck);
             var accounts = _accountList.Where(i => i.CustomerId == intCheck);
 
@@ -280,13 +271,10 @@ namespace Bank.Library.DatabaseHandler
                             DeleteAccount();
                         }
                     }
-
                 }
             }
-            Console.ReadKey();
             GoBackToMenu();
         }
- 
 
         public static void Transactions(string input)
         {
