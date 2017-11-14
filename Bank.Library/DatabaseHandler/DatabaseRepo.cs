@@ -137,7 +137,7 @@ namespace Bank.Library.DatabaseHandler
 
                     if (inp == "9") MainMenu.ShowMenu();
 
-                    else DatabaseRepo.DeleteCustomer();
+                    else DeleteCustomer();
                 }
                 else
                 {
@@ -151,7 +151,7 @@ namespace Bank.Library.DatabaseHandler
 
                             if (inp == "9") MainMenu.ShowMenu();
 
-                            else DatabaseRepo.DeleteCustomer();
+                            else DeleteCustomer();
                         }
                         else
                             _accountList.Remove(item);
@@ -169,12 +169,6 @@ namespace Bank.Library.DatabaseHandler
                         Console.ReadLine();
                     }
 
-
-
-
-
-
-
                 }
 
             }
@@ -185,7 +179,7 @@ namespace Bank.Library.DatabaseHandler
 
                 if (inp == "9") MainMenu.ShowMenu();
 
-                else DeleteCustomer(); ;
+                else DeleteCustomer();
             }
 
             GoBackToMenu();
@@ -193,42 +187,94 @@ namespace Bank.Library.DatabaseHandler
 
         public static void CreateNewAccount()
         {
-            //Skapa account för en kund som finns
+            //Skapa ett nytt konto för existerande kund
+            //ta bort denna rad ---->
+            Console.Clear();
+            Console.WriteLine("*Create new Account*\n");
+            Console.Write("Enter Customer Id: ");
+
+            var userInput = Console.ReadLine().Trim();
+            int intCheck;
+            var control = int.TryParse(userInput, out intCheck);
+
+            if (control)
+            {
+                var customer = _customerList.FirstOrDefault(i => i.Id == intCheck);
+                if (customer != null)
+                {
+                    var accounts = _accountList.Where(i => i.CustomerId == intCheck);
+
+                    var newAccId = accounts.Last().AccountNumber;
+                    newAccId++;
+                    var account = new Account
+                    {
+                        CustomerId = customer.Id,
+                        AccountNumber = newAccId,
+                        Balance = 0
+                    };
+                    _accountList.Add(account);
+
+                    Console.WriteLine(customer.Name + ", Your new account has been created! ");
+                    Console.WriteLine("Account number: " + accounts.Last().AccountNumber + " Balance: " + accounts.Last().Balance);
+                    Console.WriteLine("Press key for Menu.");
+                    Console.ReadLine();
+                    MainMenu.ShowMenu();
+                }
+
+                else Console.WriteLine("No user found.. Please press key to try again");
+                Console.ReadKey();
+                CreateNewAccount();
+            }
+            else
+            {
+                Console.WriteLine("Wrong format.. Use numbers.. Press enter to try again");
+                Console.ReadLine();
+                CreateNewAccount();
+            }
         }
 
         public static void DeleteAccount()
         {
             Console.Clear();
-            Console.Write("Input customer Id to view accounts: ");//     for the account you want to delete: ");
-            var userInput = Convert.ToInt32(Console.ReadLine());
-            var accounts = _accountList.Where(i => i.CustomerId == userInput).ToList();
+            Console.Write("Input customer Id to view accounts: ");
+            var userInput = Console.ReadLine().Trim();
+            int intCheck;
+            var control = int.TryParse(userInput, out intCheck);
 
-            foreach (var item in accounts)
+            if (control)
             {
-                Console.WriteLine("Account number :" + item.AccountNumber + " balance: " + item.Balance);
-            }
+                var accounts = _accountList.Where(i => i.CustomerId == intCheck).ToList();
 
+                foreach (var item in accounts)
+                {
+                    Console.WriteLine("Account number :" + item.AccountNumber + " balance: " + item.Balance);
+                }
 
+                var account = _accountList.FirstOrDefault(x => x.CustomerId == intCheck);
+                if (account == null)
+                {
+                    Console.WriteLine("Input is wrong or The account doesn't exist, Press enter to continue.");
+                    Console.ReadLine();
+                    DeleteAccount();
+                }
+                if (account.Balance == 0)
+                {
+                    _accountList.Remove(account);
+                }
+                else
+                {
+                    Console.WriteLine("\nAccount has balance, cannot remove, Press enter to continue.");
+                    GoBackToMenu();
 
-            var account = _accountList.FirstOrDefault(x => x.CustomerId == userInput);
-            if (account == null)
-            {
-                Console.WriteLine("Input is wrong or The account doesn't exist, Press enter to continue.");
-                Console.ReadLine();
-                DeleteAccount();
-            }
-            if (account.Balance == 0)
-            {
-                _accountList.Remove(account);
+                    DeleteAccount();
+                }
             }
             else
             {
-                Console.WriteLine("\nAccount has balance, cannot remove, Press enter to continue.");
-                GoBackToMenu();
-
+                Console.WriteLine("Wrong format.. Use numbers.. Press enter to try again");
+                Console.ReadLine();
                 DeleteAccount();
             }
-
             GoBackToMenu();
 
         }

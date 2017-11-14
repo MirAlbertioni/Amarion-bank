@@ -43,14 +43,21 @@ namespace Bank.Library.Menus
                 DatabaseRepo.CreateNewCustomer();
             }
 
-            else if (userInput == "6")
-            {
-                DatabaseRepo.DeleteAccount();
-            }
             else if (userInput == "4")
             {
                 DatabaseRepo.DeleteCustomer();
             }
+
+            else if (userInput == "5")
+            {
+                DatabaseRepo.CreateNewAccount();
+            }
+
+            else if (userInput == "6")
+            {
+                DatabaseRepo.DeleteAccount();
+            }
+        
 
             else if (userInput == "7")
             {
