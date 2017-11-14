@@ -19,7 +19,7 @@ namespace Bank.Library.Menus
                 "4) Delete customer \n " +
                 "5) Create new account \n " +
                 "6) Delete account \n " +
-                "7) Account overview \n\n\n" );
+                "7) Account overview \n\n\n");
 
             DatabaseRepo.ShowStats();
 
@@ -57,7 +57,7 @@ namespace Bank.Library.Menus
             {
                 DatabaseRepo.DeleteAccount();
             }
-        
+
 
             else if (userInput == "7")
             {

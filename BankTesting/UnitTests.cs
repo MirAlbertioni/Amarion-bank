@@ -7,21 +7,23 @@ namespace BankTesting
 {
     public class UnitTests
     {
+        public UnitTests()
+        {
+            ReadFile.ReadFromTxtFile();
+        }
+
         [Fact]
         public void SearchCostumer()
         {
-            ReadFile.ReadFromTxtFile();
             var customerList =  DatabaseRepo.Customers;
             var custListIdLast = customerList.Select(x => x.Id).Last();
-            Assert.Equal("1091", custListIdLast.ToString());
-            
-            
+            Assert.Equal("1091", custListIdLast.ToString());            
         }
+
         [Fact]
         public void SearchAccount()
         {
             //Search Account
-            ReadFile.ReadFromTxtFile();
             var accountList = DatabaseRepo.Accounts;
             var AccountFirst = accountList.Select(x => x.AccountNumber).First();
             Assert.Equal("13001", AccountFirst.ToString());
@@ -31,7 +33,6 @@ namespace BankTesting
         [Fact]
         public void Insert()
         {
-            ReadFile.ReadFromTxtFile();
             var acc = DatabaseRepo.Accounts;
             var accId = acc.FirstOrDefault(x => x.AccountNumber == 13008);
             decimal insertAmoun = 250.30M;
