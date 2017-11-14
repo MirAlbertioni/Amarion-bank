@@ -359,6 +359,7 @@ namespace Bank.Library.DatabaseHandler
 
             Console.Clear();
             Console.WriteLine("Customer Id: " + userAccount.Id + "Current balance is:");
+
             foreach (var item in accounts)
             {
                 Console.WriteLine("Account: " + item.AccountNumber + " has Balance: " + item.Balance + "kr");
