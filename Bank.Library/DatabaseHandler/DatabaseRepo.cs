@@ -304,6 +304,13 @@ namespace Bank.Library.DatabaseHandler
                     var amountReplace = withdrawAmount.Replace(".", ",");
                     decimal newWithdrawAmount;
                     var withdrawParsedSucced = decimal.TryParse(amountReplace, NumberStyles.Currency, new CultureInfo("sv-SE"), out newWithdrawAmount);
+                    if (newWithdrawAmount <= 0)
+                        Console.WriteLine("You value need to be positive.");
+                    if (newWithdrawAmount > acc.Balance)
+                    {
+                        Console.WriteLine("Whops! You can only withdraw up to: " + acc.Balance.ToString());
+                        break;
+                    }
                     acc.Balance = acc.Balance - newWithdrawAmount;
                     Console.Clear();
                     break;
@@ -313,6 +320,8 @@ namespace Bank.Library.DatabaseHandler
                     var insertReplace = insert.Replace(".", ",");
                     decimal newInsertAmount;
                     var insertParsedSucced = decimal.TryParse(insertReplace, NumberStyles.Currency, new CultureInfo("sv-SE"), out newInsertAmount);
+                    if (newInsertAmount <= 0)
+                        Console.WriteLine("You value need to be positive.");
                     acc.Balance = acc.Balance + newInsertAmount;
                     Console.Clear();
                     break;
@@ -333,6 +342,8 @@ namespace Bank.Library.DatabaseHandler
                             var transferReplace = transferAmount.Replace(".", ",");
                             var transferParsedSucced = decimal.TryParse(transferReplace, NumberStyles.Currency, new CultureInfo("sv-SE"), out amount);
                             checkLoop = false;
+                            if (amount <= 0)
+                                Console.WriteLine("You value need to be positive.");
                             if (acc.Balance > amount)
                             {
                                 acc.Balance = acc.Balance - amount;
@@ -342,7 +353,7 @@ namespace Bank.Library.DatabaseHandler
                             }
                             else
                             {
-                                Console.WriteLine("This account have not enough money to do this Transaction, press any key to try agine");
+                                Console.WriteLine("This account have not enough money to do this Transaction, press any key to try again.");
                                 checkLoop = true;
                             }
                         }
