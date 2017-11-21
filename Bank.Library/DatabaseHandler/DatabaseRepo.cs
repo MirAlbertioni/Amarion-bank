@@ -305,7 +305,10 @@ namespace Bank.Library.DatabaseHandler
                     decimal newWithdrawAmount;
                     var withdrawParsedSucced = decimal.TryParse(amountReplace, NumberStyles.Currency, new CultureInfo("sv-SE"), out newWithdrawAmount);
                     if (newWithdrawAmount <= 0)
+                    {
                         Console.WriteLine("You value need to be positive.");
+                        break;
+                    }
                     if (newWithdrawAmount > acc.Balance)
                     {
                         Console.WriteLine("Whops! You can only withdraw up to: " + acc.Balance.ToString());
@@ -321,7 +324,10 @@ namespace Bank.Library.DatabaseHandler
                     decimal newInsertAmount;
                     var insertParsedSucced = decimal.TryParse(insertReplace, NumberStyles.Currency, new CultureInfo("sv-SE"), out newInsertAmount);
                     if (newInsertAmount <= 0)
+                    {
                         Console.WriteLine("You value need to be positive.");
+                        break;
+                    }
                     acc.Balance = acc.Balance + newInsertAmount;
                     Console.Clear();
                     break;
@@ -343,7 +349,11 @@ namespace Bank.Library.DatabaseHandler
                             var transferParsedSucced = decimal.TryParse(transferReplace, NumberStyles.Currency, new CultureInfo("sv-SE"), out amount);
                             checkLoop = false;
                             if (amount <= 0)
+                            {
                                 Console.WriteLine("You value need to be positive.");
+                                break;
+                            }
+                                
                             if (acc.Balance > amount)
                             {
                                 acc.Balance = acc.Balance - amount;
