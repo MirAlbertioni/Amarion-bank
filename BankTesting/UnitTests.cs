@@ -13,7 +13,7 @@ namespace BankTesting
             ReadFile.ReadFromTxtFile();
             var customerList =  DatabaseRepo.Customers;
             var custListIdLast = customerList.Select(x => x.Id).Last();
-            Assert.Equal("1091", custListIdLast.ToString());
+            Assert.Equal("1093", custListIdLast.ToString());
             
         }
         [Fact]
