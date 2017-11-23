@@ -19,11 +19,15 @@ namespace Bank.Library.DatabaseHandler
 
         public static void GoBackToMenu()
         {
-            Console.WriteLine("Press 9 to go back to menu");
-            var menu = Console.ReadLine();
-            if (menu == "9")
+            string menu;
+            while(true)
             {
-                MainMenu.ShowMenu();
+                Console.WriteLine("Press 9 to go back to menu");
+                menu = Console.ReadLine();
+                if (menu == "9")
+                {
+                    MainMenu.ShowMenu();
+                }
             }
         }
 
@@ -37,30 +41,37 @@ namespace Bank.Library.DatabaseHandler
         public static void SearchCustomer()
         {
             Console.Clear();
-            Console.WriteLine("Search for customer\n" + "You can use name or city.");
+            Console.WriteLine("Search for customer or press 9 to go back to menu \nYou can use name or city.");
             var input = Console.ReadLine();
             bool noCustomersFound = true;
-
-            foreach (var item in Customers)
+            
+            if(input == "9")
             {
-                if (item.Name.ToUpper().Contains(input.ToUpper()) || item.City.ToUpper().Contains(input.ToUpper()))
+                MainMenu.ShowMenu();
+            }
+            else
+            {
+                foreach (var item in Customers)
                 {
-                    Console.WriteLine("ID: " + item.Id + "\nName: " + item.Name + "\nCity " + item.City);
-                    noCustomersFound = false;
+                    if (item.Name.ToUpper().Contains(input.ToUpper()) || item.City.ToUpper().Contains(input.ToUpper()))
+                    {
+                        Console.WriteLine("ID: " + item.Id + "\nName: " + item.Name + "\nCity " + item.City);
+                        noCustomersFound = false;
+                    }
                 }
+
+                if (noCustomersFound == true)
+                {
+                    Console.WriteLine("Can't find any customer with your input. Press enter to try again or press 9 back to menu");
+                    var inp = Console.ReadLine();
+
+                    if (inp == "9") MainMenu.ShowMenu();
+
+                    else SearchCustomer();
+                }
+                GoBackToMenu();
+                Console.ReadLine();
             }
-
-            if (noCustomersFound == true)
-            {
-                Console.WriteLine("Can't find any customer with your input. Press enter to try again or press 9 back to menu");
-                var inp = Console.ReadLine();
-
-                if (inp == "9") MainMenu.ShowMenu();
-
-                else SearchCustomer();
-            }
-            GoBackToMenu();
-            Console.ReadLine();
         }
 
         public static void ShowCustomerReport()
