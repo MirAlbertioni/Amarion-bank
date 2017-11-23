@@ -63,9 +63,10 @@ namespace Bank.Library.Menus
             {
                 AccountMenu.ShowAccountMenu();
             }
-
-
-
+            else
+            {
+                MainMenu.ShowMenu();
+            }
         }
     }
 }
