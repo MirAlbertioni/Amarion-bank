@@ -39,5 +39,17 @@ namespace BankTesting
 
             Assert.Equal("764,70", accId.Balance.ToString());
         }
+
+        [Fact]
+        public void DeleteAccount()
+        {
+            // Removes Account and check if gone with acc.Count
+            var accRepo = DatabaseRepo.Accounts;
+            var accCount = accRepo.Count;
+            var acc = accRepo.FirstOrDefault();
+            accRepo.Remove(acc);
+            var expectedCount = accCount - 1;
+            Assert.Equal(expectedCount.ToString(), accRepo.Count.ToString());
+        }
     }
 }
