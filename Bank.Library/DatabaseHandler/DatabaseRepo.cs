@@ -120,64 +120,74 @@ namespace Bank.Library.DatabaseHandler
         public static void DeleteCustomer()
         {
             Console.Clear();
-            Console.Write("Input customer Id  you want to delete: ");
+            Console.WriteLine("Input customer Id  you want to delete or press 9 to go back to menu");
             var userInput = Console.ReadLine();
-            var id = int.TryParse(userInput, out int ParseduserInput);
-            if (id)
+            if(userInput == "9")
             {
-                var CustemerToDelete = _customerList.FirstOrDefault(c => c.Id == ParseduserInput);
-                if (CustemerToDelete == null)
+                MainMenu.ShowMenu();
+            }
+            else
+            {
+                var id = int.TryParse(userInput, out int ParseduserInput);
+                if (id)
                 {
-                    Console.WriteLine("Can't find any customer with your input. Press enter to try again or press 9 to go back to Menu");
+                    var CustemerToDelete = _customerList.FirstOrDefault(c => c.Id == ParseduserInput);
+                    if (CustemerToDelete == null)
+                    {
+                        Console.WriteLine("Can't find any customer with your input. Press enter to try again or press 9 to go back to Menu");
+                        var inp = Console.ReadLine();
+
+                        if (inp == "9") MainMenu.ShowMenu();
+
+                        else DeleteCustomer();
+                    }
+                    else
+                    {
+                        var AccountToDelet = _accountList.Where(a => a.CustomerId == ParseduserInput).ToList();
+                        foreach (var item in AccountToDelet)
+                        {
+                            if (item.Balance != 0)
+                            {
+                                Console.WriteLine("Custemer account  balance is not null. Press enter to try again or press 9 to go back to Menu");
+                                var inp = Console.ReadLine();
+
+                                if (inp == "9") MainMenu.ShowMenu();
+
+                                else DeleteCustomer();
+                            }
+                            else _accountList.Remove(item);
+                            Console.WriteLine("Account has been deleted, press any key to go back to menu");
+                            Console.ReadLine();
+                            MainMenu.ShowMenu();
+                        }
+
+                        var accountCheck = _accountList.Where(z => z.CustomerId == ParseduserInput).ToList().Count();
+
+                        if (accountCheck == 0)
+                        {
+                            _customerList.Remove(CustemerToDelete);
+                        }
+
+                        else
+                        {
+                            Console.WriteLine("Customer account  balance is not null. Press enter to try again or press 9 to go back to Menu");
+                            Console.ReadLine();
+                        }
+                    }
+                }
+
+                else
+                {
+                    Console.WriteLine("CustemerId muste be a number. Press enter to try again or press 9 to go back to Menu");
                     var inp = Console.ReadLine();
 
                     if (inp == "9") MainMenu.ShowMenu();
 
                     else DeleteCustomer();
                 }
-                else
-                {
-                    var AccountToDelet = _accountList.Where(a => a.CustomerId == ParseduserInput).ToList();
-                    foreach (var item in AccountToDelet)
-                    {
-                        if (item.Balance != 0)
-                        {
-                            Console.WriteLine("Custemer account  balance is not null. Press enter to try again or press 9 to go back to Menu");
-                            var inp = Console.ReadLine();
 
-                            if (inp == "9") MainMenu.ShowMenu();
-
-                            else DeleteCustomer();
-                        }
-                        else _accountList.Remove(item);
-                    }
-
-                    var accountCheck = _accountList.Where(z => z.CustomerId == ParseduserInput).ToList().Count();
-
-                    if (accountCheck == 0)
-                    {
-                        _customerList.Remove(CustemerToDelete);
-                    }
-
-                    else
-                    {
-                        Console.WriteLine("Customer account  balance is not null. Press enter to try again or press 9 to go back to Menu");
-                        Console.ReadLine();
-                    }
-                }
+                GoBackToMenu();
             }
-
-            else
-            {
-                Console.WriteLine("CustemerId muste be a number. Press enter to try again or press 9 to go back to Menu");
-                var inp = Console.ReadLine();
-
-                if (inp == "9") MainMenu.ShowMenu();
-
-                else DeleteCustomer();
-            }
-
-            GoBackToMenu();
         }
 
         public static void CreateNewAccount()
@@ -380,6 +390,7 @@ namespace Bank.Library.DatabaseHandler
 
             Console.Clear();
             Console.WriteLine("Customer Id: " + userAccount.Id + "Current balance is:");
+
             foreach (var item in accounts)
             {
                 Console.WriteLine("Account: " + item.AccountNumber + " has Balance: " + item.Balance + "kr");
