@@ -50,6 +50,7 @@ namespace BankTesting
             accRepo.Remove(acc);
             var expectedCount = accCount - 1;
             Assert.Equal(expectedCount.ToString(), accRepo.Count.ToString());
+
         }
     }
 }
