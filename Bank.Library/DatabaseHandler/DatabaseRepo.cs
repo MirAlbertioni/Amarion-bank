@@ -300,7 +300,24 @@ namespace Bank.Library.DatabaseHandler
         public static void Transactions(string input)
         {
             Console.Clear();
-            Console.Write("Type in id number to login:");
+            var sb = new StringBuilder();
+            switch (input)
+            {
+                case "1":
+                    sb.Append("a withdrawal");
+                    sb.AppendLine();
+                    break;
+                case "2":
+                    sb.Append("your deposit");
+                    sb.AppendLine();
+                    break;
+                case "3":
+                    sb.Append("your transfer");
+                    sb.AppendLine();
+                    break;
+            }
+
+            Console.WriteLine("Type in id number to login:");
             var userInput = Console.ReadLine();
             Console.Clear();
             Account acc = null;
@@ -313,7 +330,7 @@ namespace Bank.Library.DatabaseHandler
                 Console.WriteLine("Account: " + item.AccountNumber + " has Balance: " + item.Balance + "kr");
             }
 
-            Console.WriteLine("Choose one of above accounts");
+            Console.WriteLine("\n\nSelect one of the above accounts to make " + sb);
             var accountInput = Int32.Parse(Console.ReadLine());
             acc = accounts.SingleOrDefault(x => x.AccountNumber == accountInput);
 
