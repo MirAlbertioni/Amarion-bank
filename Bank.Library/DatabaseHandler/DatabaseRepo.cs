@@ -201,9 +201,13 @@ namespace Bank.Library.DatabaseHandler
         {
             Console.Clear();
             Console.WriteLine("*Create new Account*\n");
-            Console.Write("Enter Customer Id: ");
+            Console.WriteLine("Enter Customer Id or press 9 to go back to menu");
 
             var userInput = Console.ReadLine().Trim();
+            if(userInput == "9")
+            {
+                MainMenu.ShowMenu();
+            }
             var control = int.TryParse(userInput, out int intCheck);
 
             if (control)
