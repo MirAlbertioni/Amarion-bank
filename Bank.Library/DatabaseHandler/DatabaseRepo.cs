@@ -84,47 +84,44 @@ namespace Bank.Library.DatabaseHandler
             {
                 MainMenu.ShowMenu();
             }
-            else
+            foreach (var item in Customers)
             {
-                foreach (var item in Customers)
+                if (item.Id.ToString().Contains(input))
                 {
-                    if (item.Id.ToString().Contains(input))
-                    {
-                        Console.WriteLine("ID: " + item.Id +
-                            "\nOrganisation number: " + item.OrgNumber +
-                            "\nName: " + item.Name +
-                            "\nAdress " + item.Adress + " " + item.AreaCode + "\n\n");
-                        noCustomersFound = false;
-                    }
+                    Console.WriteLine("ID: " + item.Id +
+                        "\nOrganisation number: " + item.OrgNumber +
+                        "\nName: " + item.Name +
+                        "\nAdress " + item.Adress + " " + item.AreaCode + "\n\n");
+                    noCustomersFound = false;
                 }
-
-                HashSet<decimal> balanceList = new HashSet<decimal>();
-                foreach (var account in Accounts)
-                {
-                    if (account.CustomerId.ToString().Contains(input))
-                    {
-                        Console.WriteLine(account.CustomerId +
-                            ": " + account.Balance + " kr");
-                        noCustomersFound = false;
-                        balanceList.Add(account.Balance);
-
-                        Console.WriteLine(balanceList.Sum());
-                    }
-                }
-
-                if (noCustomersFound == true)
-                {
-                    Console.WriteLine("Can't find any customer with your input. Press enter to try again or press 9 to go back to Menu");
-
-                    var inp = Console.ReadLine();
-
-                    if (inp == "9") MainMenu.ShowMenu();
-
-                    else ShowCustomerReport();
-                }
-                GoBackToMenu();
-                Console.ReadLine();
             }
+
+            HashSet<decimal> balanceList = new HashSet<decimal>();
+            foreach (var account in Accounts)
+            {
+                if (account.CustomerId.ToString().Contains(input))
+                {
+                    Console.WriteLine(account.CustomerId +
+                        ": " + account.Balance + " kr");
+                    noCustomersFound = false;
+                    balanceList.Add(account.Balance);
+
+                    Console.WriteLine(balanceList.Sum());
+                }
+            }
+
+            if (noCustomersFound == true)
+            {
+                Console.WriteLine("Can't find any customer with your input. Press enter to try again or press 9 to go back to Menu");
+
+                var inp = Console.ReadLine();
+
+                if (inp == "9") MainMenu.ShowMenu();
+
+                else ShowCustomerReport();
+            }
+            GoBackToMenu();
+            Console.ReadLine();
         }
 
         public static void CreateNewCustomer()
@@ -136,8 +133,12 @@ namespace Bank.Library.DatabaseHandler
         public static void DeleteCustomer()
         {
             Console.Clear();
-            Console.Write("Input customer Id  you want to delete: ");
+            Console.WriteLine("Input customer Id  you want to delete or go back to menu by pressing 9");
             var userInput = Console.ReadLine();
+            if(userInput == "9")
+            {
+                MainMenu.ShowMenu();
+            }
             var id = int.TryParse(userInput, out int ParseduserInput);
             if (id)
             {
