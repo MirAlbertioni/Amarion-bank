@@ -337,19 +337,30 @@ namespace Bank.Library.DatabaseHandler
                     break;
 
                 case "2":
-                    Console.WriteLine("Enter amount you wish to insert");
-                    var insert = Console.ReadLine();
-                    var insertReplace = insert.Replace(".", ",");
+                    string insert;
+                    string insertRemplace;
                     decimal newInsertAmount;
-                    var insertParsedSucced = decimal.TryParse(insertReplace, NumberStyles.Currency, new CultureInfo("sv-SE"), out newInsertAmount);
-                    if (newInsertAmount <= 0)
+                    do
                     {
-                        Console.WriteLine("You value need to be positive.");
-                        break;
-                    }
+                        Console.WriteLine("Enter amount you wish to insert");
+                        insert = Console.ReadLine();
+                        insertRemplace = insert.Replace(".", ",");
+                        var insertParsedSucced = decimal.TryParse(insertRemplace, NumberStyles.Currency, new CultureInfo("sv-SE"), out newInsertAmount);
+                        if (newInsertAmount <= 0)
+                        {
+                            Console.WriteLine("You value need to be positive.");
+                            inputStatus = false;
+                        }
+                        else
+                        {
+                            inputStatus = true;
+                        }
+                    } while (!inputStatus);
+   
                     acc.Balance = acc.Balance + newInsertAmount;
                     Console.Clear();
                     break;
+
                 case "3":
                     bool checkLoop = true;
                     decimal amount = 0m;
