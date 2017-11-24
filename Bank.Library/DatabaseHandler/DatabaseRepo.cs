@@ -295,28 +295,47 @@ namespace Bank.Library.DatabaseHandler
             Console.WriteLine("Choose one of above accounts");
             var accountInput = Int32.Parse(Console.ReadLine());
             acc = accounts.SingleOrDefault(x => x.AccountNumber == accountInput);
+            bool inputStatus = true;
 
             switch (input)
             {
                 case "1":
-                    Console.WriteLine("Enter amount for withdrawal");
-                    var withdrawAmount = Console.ReadLine();
-                    var amountReplace = withdrawAmount.Replace(".", ",");
+                    string withdrawAmount;
+                    string amountReplace;
                     decimal newWithdrawAmount;
-                    var withdrawParsedSucced = decimal.TryParse(amountReplace, NumberStyles.Currency, new CultureInfo("sv-SE"), out newWithdrawAmount);
-                    if (newWithdrawAmount <= 0)
+
+                    if (acc.Balance <= 0)
                     {
-                        Console.WriteLine("You value need to be positive.");
+                        Console.WriteLine("You dont have any balance to withdeaw.");
+                        Console.WriteLine("Press any key to continue..");
+                        Console.ReadKey();
                         break;
                     }
-                    if (newWithdrawAmount > acc.Balance)
+                    do
                     {
-                        Console.WriteLine("Whops! You can only withdraw up to: " + acc.Balance.ToString());
-                        break;
-                    }
+                        Console.WriteLine("Enter amount for withdraw");
+                        withdrawAmount = Console.ReadLine();
+                        amountReplace = withdrawAmount.Replace(".", ",");
+                        var withdrawParsedSucced = decimal.TryParse(amountReplace, NumberStyles.Currency, new CultureInfo("sv-SE"), out newWithdrawAmount);
+                        if (newWithdrawAmount <= 0)
+                        {
+                            Console.WriteLine("You value need to be positive.");
+                            inputStatus = false;
+                        }
+                        else if (newWithdrawAmount > acc.Balance)
+                        {
+                            Console.WriteLine("Whops! You can only withdraw up to: " + acc.Balance.ToString() + ":-");
+                            inputStatus = false;
+                        }
+                        else
+                        {
+                            inputStatus = true;
+                        }
+                    } while (!inputStatus);
                     acc.Balance = acc.Balance - newWithdrawAmount;
                     Console.Clear();
                     break;
+
                 case "2":
                     Console.WriteLine("Enter amount you wish to insert");
                     var insert = Console.ReadLine();
@@ -353,7 +372,7 @@ namespace Bank.Library.DatabaseHandler
                                 Console.WriteLine("You value need to be positive.");
                                 break;
                             }
-                                
+
                             if (acc.Balance > amount)
                             {
                                 acc.Balance = acc.Balance - amount;
