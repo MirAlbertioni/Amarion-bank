@@ -295,52 +295,82 @@ namespace Bank.Library.DatabaseHandler
             Console.WriteLine("Choose one of above accounts");
             var accountInput = Int32.Parse(Console.ReadLine());
             acc = accounts.SingleOrDefault(x => x.AccountNumber == accountInput);
+            bool inputStatus = true;
 
             switch (input)
             {
                 case "1":
-                    Console.WriteLine("Enter amount for withdrawal");
-                    var withdrawAmount = Console.ReadLine();
-                    var amountReplace = withdrawAmount.Replace(".", ",");
+                    string withdrawAmount;
+                    string amountReplace;
                     decimal newWithdrawAmount;
-                    var withdrawParsedSucced = decimal.TryParse(amountReplace, NumberStyles.Currency, new CultureInfo("sv-SE"), out newWithdrawAmount);
-                    if (newWithdrawAmount <= 0)
+
+                    if (acc.Balance <= 0)
                     {
-                        Console.WriteLine("You value need to be positive.");
+                        Console.WriteLine("You dont have any balance to withdeaw.");
+                        Console.WriteLine("Press any key to continue..");
+                        Console.ReadKey();
                         break;
                     }
-                    if (newWithdrawAmount > acc.Balance)
+                    do
                     {
-                        Console.WriteLine("Whops! You can only withdraw up to: " + acc.Balance.ToString());
-                        break;
-                    }
+                        Console.WriteLine("Enter amount for withdraw");
+                        withdrawAmount = Console.ReadLine();
+                        amountReplace = withdrawAmount.Replace(".", ",");
+                        var withdrawParsedSucced = decimal.TryParse(amountReplace, NumberStyles.Currency, new CultureInfo("sv-SE"), out newWithdrawAmount);
+                        if (newWithdrawAmount <= 0)
+                        {
+                            Console.WriteLine("You value need to be positive.");
+                            inputStatus = false;
+                        }
+                        else if (newWithdrawAmount > acc.Balance)
+                        {
+                            Console.WriteLine("Whops! You can only withdraw up to: " + acc.Balance.ToString() + ":-");
+                            inputStatus = false;
+                        }
+                        else
+                        {
+                            inputStatus = true;
+                        }
+                    } while (!inputStatus);
                     acc.Balance = acc.Balance - newWithdrawAmount;
                     Console.Clear();
                     break;
+
                 case "2":
-                    Console.WriteLine("Enter amount you wish to insert");
-                    var insert = Console.ReadLine();
-                    var insertReplace = insert.Replace(".", ",");
+                    string insert;
+                    string insertRemplace;
                     decimal newInsertAmount;
-                    var insertParsedSucced = decimal.TryParse(insertReplace, NumberStyles.Currency, new CultureInfo("sv-SE"), out newInsertAmount);
-                    if (newInsertAmount <= 0)
+                    do
                     {
-                        Console.WriteLine("You value need to be positive.");
-                        break;
-                    }
+                        Console.WriteLine("Enter amount you wish to insert");
+                        insert = Console.ReadLine();
+                        insertRemplace = insert.Replace(".", ",");
+                        var insertParsedSucced = decimal.TryParse(insertRemplace, NumberStyles.Currency, new CultureInfo("sv-SE"), out newInsertAmount);
+                        if (newInsertAmount <= 0)
+                        {
+                            Console.WriteLine("You value need to be positive.");
+                            inputStatus = false;
+                        }
+                        else
+                        {
+                            inputStatus = true;
+                        }
+                    } while (!inputStatus);
+   
                     acc.Balance = acc.Balance + newInsertAmount;
                     Console.Clear();
                     break;
+
                 case "3":
                     bool checkLoop = true;
                     decimal amount = 0m;
                     var transferInput = 0;
                     Account transferAccount = null;
+                    Console.WriteLine("Transfer to account number?");
+                    transferInput = Convert.ToInt32(Console.ReadLine());
+                    transferAccount = _accountList.SingleOrDefault(x => x.AccountNumber == transferInput);
                     while (checkLoop)
                     {
-                        Console.WriteLine("Transfer to account number?");
-                        transferInput = Convert.ToInt32(Console.ReadLine());
-                        transferAccount = accounts.SingleOrDefault(x => x.AccountNumber == transferInput);
                         if (transferAccount != acc)
                         {
                             Console.WriteLine("Enter amount you wish to transfer?");
@@ -348,18 +378,19 @@ namespace Bank.Library.DatabaseHandler
                             var transferReplace = transferAmount.Replace(".", ",");
                             var transferParsedSucced = decimal.TryParse(transferReplace, NumberStyles.Currency, new CultureInfo("sv-SE"), out amount);
                             checkLoop = false;
-                            if (amount <= 0)
-                            {
-                                Console.WriteLine("You value need to be positive.");
-                                break;
-                            }
-                                
-                            if (acc.Balance > amount)
+
+
+                            if (acc.Balance >= amount)
                             {
                                 acc.Balance = acc.Balance - amount;
                                 transferAccount.Balance = transferAccount.Balance + amount;
                                 _accountList.Add(transferAccount);
                                 checkLoop = false;
+                            }
+                            else if (amount <= 0)
+                            {
+                                Console.WriteLine("You value need to be positive.");
+                                checkLoop = true;
                             }
                             else
                             {
