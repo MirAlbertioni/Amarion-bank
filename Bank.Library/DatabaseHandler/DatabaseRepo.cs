@@ -366,11 +366,11 @@ namespace Bank.Library.DatabaseHandler
                     decimal amount = 0m;
                     var transferInput = 0;
                     Account transferAccount = null;
+                    Console.WriteLine("Transfer to account number?");
+                    transferInput = Convert.ToInt32(Console.ReadLine());
+                    transferAccount = _accountList.SingleOrDefault(x => x.AccountNumber == transferInput);
                     while (checkLoop)
                     {
-                        Console.WriteLine("Transfer to account number?");
-                        transferInput = Convert.ToInt32(Console.ReadLine());
-                        transferAccount = accounts.SingleOrDefault(x => x.AccountNumber == transferInput);
                         if (transferAccount != acc)
                         {
                             Console.WriteLine("Enter amount you wish to transfer?");
@@ -378,18 +378,19 @@ namespace Bank.Library.DatabaseHandler
                             var transferReplace = transferAmount.Replace(".", ",");
                             var transferParsedSucced = decimal.TryParse(transferReplace, NumberStyles.Currency, new CultureInfo("sv-SE"), out amount);
                             checkLoop = false;
-                            if (amount <= 0)
-                            {
-                                Console.WriteLine("You value need to be positive.");
-                                break;
-                            }
 
-                            if (acc.Balance > amount)
+
+                            if (acc.Balance >= amount)
                             {
                                 acc.Balance = acc.Balance - amount;
                                 transferAccount.Balance = transferAccount.Balance + amount;
                                 _accountList.Add(transferAccount);
                                 checkLoop = false;
+                            }
+                            else if (amount <= 0)
+                            {
+                                Console.WriteLine("You value need to be positive.");
+                                checkLoop = true;
                             }
                             else
                             {
