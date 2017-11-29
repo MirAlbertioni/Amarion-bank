@@ -319,8 +319,25 @@ namespace Bank.Library.DatabaseHandler
 
             Console.WriteLine("Type in id number to login:");
             var userInput = Console.ReadLine();
+
+            int parsedUserInput = 0;
+            try
+            {
+                parsedUserInput = Int32.Parse(userInput);
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Please press a valid number, press enter to try again or press 9 to go back to menu");
+                var inputs = Console.ReadLine();
+                if (inputs == "9")
+                {
+                    MainMenu.ShowMenu();
+                }
+                Transactions(input);
+            }
+
             var valid = _customerList.Any(x => x.Id == Int32.Parse(userInput));
-            if(!valid)
+            if (!valid)
             {
                 Console.WriteLine("Account does not exist, press enter to try again or press 9 to go back to menu");
                 var inputs = Console.ReadLine();
@@ -349,13 +366,23 @@ namespace Bank.Library.DatabaseHandler
             }
             catch (Exception)
             {
+                Console.WriteLine("Please press a valid number, press enter to try again or press 9 to go back to menu");
+                var inputs = Console.ReadLine();
+                if (inputs == "9")
+                {
+                    MainMenu.ShowMenu();
+                }
                 Transactions(input);
             }
             acc = accounts.SingleOrDefault(x => x.AccountNumber == accountInput);
             if(acc == null)
             {
-                Console.WriteLine("Account number does not exist, press any key to continue");
-                Console.ReadKey();
+                Console.WriteLine("Account number does not exist, press enter to try again or press 9 to go back to menu");
+                var inputs = Console.ReadLine();
+                if (inputs == "9")
+                {
+                    MainMenu.ShowMenu();
+                }
                 Transactions(input);
             }
 
