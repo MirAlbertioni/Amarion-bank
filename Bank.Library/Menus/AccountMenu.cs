@@ -17,11 +17,18 @@ namespace Bank.Library.Menus
             "9) Back to menu");
 
             var userInput = Console.ReadLine();
-            if(userInput == "9")
+            if (userInput == "9")
             {
                 MainMenu.ShowMenu();
             }
-            else DatabaseRepo.Transactions(userInput);
+            else if (userInput == "1" || userInput == "2" || userInput == "3")
+            {
+                DatabaseRepo.Transactions(userInput);
+            }
+            else
+            {
+                ShowAccountMenu();
+            }
         }
     }
 }

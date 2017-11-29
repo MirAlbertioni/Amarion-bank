@@ -319,6 +319,17 @@ namespace Bank.Library.DatabaseHandler
 
             Console.WriteLine("Type in id number to login:");
             var userInput = Console.ReadLine();
+            var valid = _customerList.Any(x => x.Id == Int32.Parse(userInput));
+            if(!valid)
+            {
+                Console.WriteLine("Account does not exist, press enter to try again or press 9 to go back to menu");
+                var inputs = Console.ReadLine();
+                if(inputs == "9")
+                {
+                    MainMenu.ShowMenu();
+                }
+                Transactions(input);
+            }
             Console.Clear();
             Account acc = null;
             var userAccount = _customerList.SingleOrDefault(user => user.Id == Int32.Parse(userInput));
@@ -331,8 +342,22 @@ namespace Bank.Library.DatabaseHandler
             }
 
             Console.WriteLine("\n\nSelect one of the above accounts to make " + sb);
-            var accountInput = Int32.Parse(Console.ReadLine());
+            int accountInput = 0;
+            try
+            {
+                accountInput = Int32.Parse(Console.ReadLine());
+            }
+            catch (Exception)
+            {
+                Transactions(input);
+            }
             acc = accounts.SingleOrDefault(x => x.AccountNumber == accountInput);
+            if(acc == null)
+            {
+                Console.WriteLine("Account number does not exist, press any key to continue");
+                Console.ReadKey();
+                Transactions(input);
+            }
 
             switch (input)
             {
