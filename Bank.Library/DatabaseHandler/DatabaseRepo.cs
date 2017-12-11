@@ -19,11 +19,15 @@ namespace Bank.Library.DatabaseHandler
 
         public static void GoBackToMenu()
         {
-            Console.WriteLine("Press 9 to go back to menu");
-            var menu = Console.ReadLine();
-            if (menu == "9")
+            string menu;
+            while(true)
             {
-                MainMenu.ShowMenu();
+                Console.WriteLine("Press 9 to go back to menu");
+                menu = Console.ReadLine();
+                if (menu == "9")
+                {
+                    MainMenu.ShowMenu();
+                }
             }
         }
 
@@ -37,39 +41,49 @@ namespace Bank.Library.DatabaseHandler
         public static void SearchCustomer()
         {
             Console.Clear();
-            Console.WriteLine("Search for customer\n" + "You can use name or city.");
+            Console.WriteLine("Search for customer or press 9 to go back to menu \nYou can use name or city.");
             var input = Console.ReadLine();
             bool noCustomersFound = true;
-
-            foreach (var item in Customers)
+            
+            if(input == "9")
             {
-                if (item.Name.ToUpper().Contains(input.ToUpper()) || item.City.ToUpper().Contains(input.ToUpper()))
+                MainMenu.ShowMenu();
+            }
+            else
+            {
+                foreach (var item in Customers)
                 {
-                    Console.WriteLine("ID: " + item.Id + "\nName: " + item.Name + "\nCity " + item.City);
-                    noCustomersFound = false;
+                    if (item.Name.ToUpper().Contains(input.ToUpper()) || item.City.ToUpper().Contains(input.ToUpper()))
+                    {
+                        Console.WriteLine("ID: " + item.Id + "\nName: " + item.Name + "\nCity " + item.City);
+                        noCustomersFound = false;
+                    }
                 }
+
+                if (noCustomersFound == true)
+                {
+                    Console.WriteLine("Can't find any customer with your input. Press enter to try again or press 9 back to menu");
+                    var inp = Console.ReadLine();
+
+                    if (inp == "9") MainMenu.ShowMenu();
+
+                    else SearchCustomer();
+                }
+                GoBackToMenu();
+                Console.ReadLine();
             }
-
-            if (noCustomersFound == true)
-            {
-                Console.WriteLine("Can't find any customer with your input. Press enter to try again or press 9 back to menu");
-                var inp = Console.ReadLine();
-
-                if (inp == "9") MainMenu.ShowMenu();
-
-                else SearchCustomer();
-            }
-            GoBackToMenu();
-            Console.ReadLine();
         }
 
         public static void ShowCustomerReport()
         {
             Console.Clear();
-            Console.WriteLine("Search customer by ID");
+            Console.WriteLine("Search customer by ID or press 9 to go back to menu");
             var input = Console.ReadLine();
             bool noCustomersFound = true;
-
+            if(input == "9")
+            {
+                MainMenu.ShowMenu();
+            }
             foreach (var item in Customers)
             {
                 if (item.Id.ToString().Contains(input))
@@ -96,7 +110,6 @@ namespace Bank.Library.DatabaseHandler
                 }
             }
 
-
             if (noCustomersFound == true)
             {
                 Console.WriteLine("Can't find any customer with your input. Press enter to try again or press 9 to go back to Menu");
@@ -120,8 +133,12 @@ namespace Bank.Library.DatabaseHandler
         public static void DeleteCustomer()
         {
             Console.Clear();
-            Console.Write("Input customer Id  you want to delete: ");
+            Console.WriteLine("Input customer Id  you want to delete or go back to menu by pressing 9");
             var userInput = Console.ReadLine();
+            if(userInput == "9")
+            {
+                MainMenu.ShowMenu();
+            }
             var id = int.TryParse(userInput, out int ParseduserInput);
             if (id)
             {
@@ -184,9 +201,13 @@ namespace Bank.Library.DatabaseHandler
         {
             Console.Clear();
             Console.WriteLine("*Create new Account*\n");
-            Console.Write("Enter Customer Id: ");
+            Console.WriteLine("Enter Customer Id or press 9 to go back to menu");
 
             var userInput = Console.ReadLine().Trim();
+            if(userInput == "9")
+            {
+                MainMenu.ShowMenu();
+            }
             var control = int.TryParse(userInput, out int intCheck);
 
             if (control)
@@ -279,8 +300,53 @@ namespace Bank.Library.DatabaseHandler
         public static void Transactions(string input)
         {
             Console.Clear();
-            Console.Write("Type in id number to login:");
+            var sb = new StringBuilder();
+            switch (input)
+            {
+                case "1":
+                    sb.Append("a withdrawal");
+                    sb.AppendLine();
+                    break;
+                case "2":
+                    sb.Append("your deposit");
+                    sb.AppendLine();
+                    break;
+                case "3":
+                    sb.Append("your transfer");
+                    sb.AppendLine();
+                    break;
+            }
+
+            Console.WriteLine("Type in id number to login:");
             var userInput = Console.ReadLine();
+
+            int parsedUserInput = 0;
+            try
+            {
+                parsedUserInput = Int32.Parse(userInput);
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Please press a valid number, press enter to try again or press 9 to go back to menu");
+                var inputs = Console.ReadLine();
+                if (inputs == "9")
+                {
+                    MainMenu.ShowMenu();
+                }
+                Transactions(input);
+            }
+
+            var valid = _customerList.Any(x => x.Id == Int32.Parse(userInput));
+            if (!valid)
+            {
+                Console.WriteLine("Account does not exist, press enter to try again or press 9 to go back to menu");
+                var inputs = Console.ReadLine();
+                if(inputs == "9")
+                {
+                    MainMenu.ShowMenu();
+                }
+                Transactions(input);
+            }
             Console.Clear();
             Account acc = null;
             var userAccount = _customerList.SingleOrDefault(user => user.Id == Int32.Parse(userInput));
@@ -292,9 +358,33 @@ namespace Bank.Library.DatabaseHandler
                 Console.WriteLine("Account: " + item.AccountNumber + " has Balance: " + item.Balance + "kr");
             }
 
-            Console.WriteLine("Choose one of above accounts");
-            var accountInput = Int32.Parse(Console.ReadLine());
+            Console.WriteLine("\n\nSelect one of the above accounts to make " + sb);
+            int accountInput = 0;
+            try
+            {
+                accountInput = Int32.Parse(Console.ReadLine());
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Please press a valid number, press enter to try again or press 9 to go back to menu");
+                var inputs = Console.ReadLine();
+                if (inputs == "9")
+                {
+                    MainMenu.ShowMenu();
+                }
+                Transactions(input);
+            }
             acc = accounts.SingleOrDefault(x => x.AccountNumber == accountInput);
+            if(acc == null)
+            {
+                Console.WriteLine("Account number does not exist, press enter to try again or press 9 to go back to menu");
+                var inputs = Console.ReadLine();
+                if (inputs == "9")
+                {
+                    MainMenu.ShowMenu();
+                }
+                Transactions(input);
+            }
 
             switch (input)
             {
@@ -380,6 +470,7 @@ namespace Bank.Library.DatabaseHandler
 
             Console.Clear();
             Console.WriteLine("Customer Id: " + userAccount.Id + "Current balance is:");
+
             foreach (var item in accounts)
             {
                 Console.WriteLine("Account: " + item.AccountNumber + " has Balance: " + item.Balance + "kr");

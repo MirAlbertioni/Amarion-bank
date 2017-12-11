@@ -13,16 +13,22 @@ namespace Bank.Library.Menus
             Console.WriteLine("Account overview\n\n " +
             "1) Withdraw \n " +
             "2) Insert \n " +
-            "3) Transformer \n " +
+            "3) Transfer \n " +
             "9) Back to menu");
 
             var userInput = Console.ReadLine();
-            if(userInput == "9")
+            if (userInput == "9")
             {
                 MainMenu.ShowMenu();
             }
-            else DatabaseRepo.Transactions(userInput);
-
+            else if (userInput == "1" || userInput == "2" || userInput == "3")
+            {
+                DatabaseRepo.Transactions(userInput);
+            }
+            else
+            {
+                ShowAccountMenu();
+            }
         }
     }
 }
