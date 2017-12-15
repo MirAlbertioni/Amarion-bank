@@ -281,6 +281,8 @@ namespace Bank.Library.DatabaseHandler
             Console.Clear();
             Console.Write("Type in id number to login:");
             var userInput = Console.ReadLine();
+
+
             Console.Clear();
             Account acc = null;
             var userAccount = _customerList.SingleOrDefault(user => user.Id == Int32.Parse(userInput));

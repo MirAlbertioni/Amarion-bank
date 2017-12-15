@@ -10,19 +10,34 @@ namespace Bank.Library.Menus
         public static void ShowAccountMenu()
         {
             Console.Clear();
-            Console.WriteLine("Account overview\n\n " +
-            "1) Withdraw \n " +
-            "2) Insert \n " +
-            "3) Transfer \n " +
-            "9) Back to menu");
 
-            var userInput = Console.ReadLine();
-            if(userInput == "9")
+            bool rightInput = false;
+            string userInput;
+            do
             {
-                MainMenu.ShowMenu();
-            }
-            else DatabaseRepo.Transactions(userInput);
+                Console.WriteLine("Account overview\n\n " +
+                                    "1) Withdraw \n " +
+                                    "2) Insert \n " +
+                                    "3) Transfer \n " +
+                                    "9) Back to menu");
 
+                userInput = Console.ReadLine();
+                if (userInput == "1" || userInput == "2" || userInput == "3" || userInput == "4")
+                {
+                    rightInput = true;
+                }
+                else if (userInput == "9")
+                {
+                    MainMenu.ShowMenu();
+                    break;
+                }
+                else
+                {
+                    Console.Clear();
+                    Console.WriteLine("Fel input, försökt igen:");
+                }
+            } while (!rightInput);
+            DatabaseRepo.Transactions(userInput);
         }
     }
 }
