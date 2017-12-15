@@ -10,7 +10,6 @@ namespace Bank.Library.Menus
         public static void ShowAccountMenu()
         {
             Console.Clear();
-
             bool rightInput = false;
             string userInput;
             do
@@ -29,7 +28,6 @@ namespace Bank.Library.Menus
                 else if (userInput == "9")
                 {
                     MainMenu.ShowMenu();
-                    break;
                 }
                 else
                 {

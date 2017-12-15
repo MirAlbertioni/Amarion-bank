@@ -278,25 +278,88 @@ namespace Bank.Library.DatabaseHandler
 
         public static void Transactions(string input)
         {
-            Console.Clear();
-            Console.Write("Type in id number to login:");
-            var userInput = Console.ReadLine();
+            // Input in:
+            // - 1) Withdraw
+            // - 2) Insert
+            // - 3) Transfer
 
-
-            Console.Clear();
+            bool rightInput;
+            bool validAccount = false;
+            string userInput;
+            int intInput = 0;
             Account acc = null;
-            var userAccount = _customerList.SingleOrDefault(user => user.Id == Int32.Parse(userInput));
-            var accounts = _accountList.Where(x => x.CustomerId == userAccount.Id).ToList();
-            Console.WriteLine("Customer Id: " + userAccount.Id + " has " + accounts.Capacity + " accounts: ");
+            Customer customer = null;
 
-            foreach (var item in accounts)
+            Console.Clear();
+            do
             {
-                Console.WriteLine("Account: " + item.AccountNumber + " has Balance: " + item.Balance + "kr");
-            }
+                rightInput = false;
+                do
+                {
+                    Console.Write("Type in your customer ID to login:");
+                    userInput = Console.ReadLine();
+                    try
+                    {
+                        intInput = Int32.Parse(userInput);
+                        rightInput = true;
+                    }
+                    catch (Exception)
+                    {
+                        Console.WriteLine("Wrong input, please type an numeric format of your customer ID:");
+                        rightInput = false;
+                    }
+                } while (!rightInput);
 
-            Console.WriteLine("Choose one of above accounts");
-            var accountInput = Int32.Parse(Console.ReadLine());
-            acc = accounts.SingleOrDefault(x => x.AccountNumber == accountInput);
+                customer = _customerList.SingleOrDefault(user => user.Id == intInput);
+                if (customer == null)
+                {
+                    Console.WriteLine("The customer ID " + intInput + " was not found, please try again:");
+                }
+                else
+                {
+                    validAccount = true;
+                }
+            } while (!validAccount);
+            Console.Clear();
+
+
+            var accounts = _accountList.Where(x => x.CustomerId == customer.Id).ToList();
+            Console.WriteLine("Customer Id: " + customer.Id + " has " + accounts.Capacity + " accounts: ");
+
+            rightInput = false;
+            do
+            {
+                foreach (var item in accounts)
+                {
+                    Console.WriteLine("Account: " + item.AccountNumber + " has Balance: " + item.Balance + "kr");
+                }
+                Console.WriteLine("Choose one of the above accounts:");
+                try
+                {
+                    intInput = Int32.Parse(Console.ReadLine());
+
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine("Wrong input, please type an numeric format of your account ID:");
+                    rightInput = false;
+                    continue;
+                }
+                
+                acc = accounts.SingleOrDefault(x => x.AccountNumber == intInput);
+                if (acc == null)
+                {
+                    Console.WriteLine("The account with the ID " + intInput + " does not exist. Please try again:");
+                    rightInput = false;
+                }
+                else
+                {
+                    rightInput = true;
+                }
+
+            } while (!rightInput);
+
+
             bool inputStatus = true;
 
             switch (input)
@@ -358,7 +421,7 @@ namespace Bank.Library.DatabaseHandler
                             inputStatus = true;
                         }
                     } while (!inputStatus);
-   
+
                     acc.Balance = acc.Balance + newInsertAmount;
                     Console.Clear();
                     break;
@@ -412,7 +475,7 @@ namespace Bank.Library.DatabaseHandler
             }
 
             Console.Clear();
-            Console.WriteLine("Customer Id: " + userAccount.Id + "Current balance is:");
+            Console.WriteLine("Customer Id: " + customer.Id + " Current balance is:");
             foreach (var item in accounts)
             {
                 Console.WriteLine("Account: " + item.AccountNumber + " has Balance: " + item.Balance + "kr");
