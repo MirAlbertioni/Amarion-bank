@@ -20,7 +20,7 @@ namespace Bank.Library.DatabaseHandler
         public static void GoBackToMenu()
         {
             string menu;
-            while(true)
+            while (true)
             {
                 Console.WriteLine("Press 9 to go back to menu");
                 menu = Console.ReadLine();
@@ -44,8 +44,8 @@ namespace Bank.Library.DatabaseHandler
             Console.WriteLine("Search for customer or press 9 to go back to menu \nYou can use name or city.");
             var input = Console.ReadLine();
             bool noCustomersFound = true;
-            
-            if(input == "9")
+
+            if (input == "9")
             {
                 MainMenu.ShowMenu();
             }
@@ -80,7 +80,7 @@ namespace Bank.Library.DatabaseHandler
             Console.WriteLine("Search customer by ID or press 9 to go back to menu");
             var input = Console.ReadLine();
             bool noCustomersFound = true;
-            if(input == "9")
+            if (input == "9")
             {
                 MainMenu.ShowMenu();
             }
@@ -135,7 +135,7 @@ namespace Bank.Library.DatabaseHandler
             Console.Clear();
             Console.WriteLine("Input customer Id  you want to delete or go back to menu by pressing 9");
             var userInput = Console.ReadLine();
-            if(userInput == "9")
+            if (userInput == "9")
             {
                 MainMenu.ShowMenu();
             }
@@ -204,7 +204,7 @@ namespace Bank.Library.DatabaseHandler
             Console.WriteLine("Enter Customer Id or press 9 to go back to menu");
 
             var userInput = Console.ReadLine().Trim();
-            if(userInput == "9")
+            if (userInput == "9")
             {
                 MainMenu.ShowMenu();
             }
@@ -341,7 +341,7 @@ namespace Bank.Library.DatabaseHandler
             {
                 Console.WriteLine("Account does not exist, press enter to try again or press 9 to go back to menu");
                 var inputs = Console.ReadLine();
-                if(inputs == "9")
+                if (inputs == "9")
                 {
                     MainMenu.ShowMenu();
                 }
@@ -375,7 +375,7 @@ namespace Bank.Library.DatabaseHandler
                 Transactions(input);
             }
             acc = accounts.SingleOrDefault(x => x.AccountNumber == accountInput);
-            if(acc == null)
+            if (acc == null)
             {
                 Console.WriteLine("Account number does not exist, press enter to try again or press 9 to go back to menu");
                 var inputs = Console.ReadLine();
@@ -429,39 +429,55 @@ namespace Bank.Library.DatabaseHandler
                     while (checkLoop)
                     {
                         Console.WriteLine("Transfer to account number?");
-                        transferInput = Convert.ToInt32(Console.ReadLine());
-                        transferAccount = accounts.SingleOrDefault(x => x.AccountNumber == transferInput);
-                        if (transferAccount != acc)
+                        try
                         {
-                            Console.WriteLine("Enter amount you wish to transfer?");
-                            var transferAmount = Console.ReadLine();
-                            var transferReplace = transferAmount.Replace(".", ",");
-                            var transferParsedSucced = decimal.TryParse(transferReplace, NumberStyles.Currency, new CultureInfo("sv-SE"), out amount);
-                            checkLoop = false;
-                            if (amount <= 0)
+                            transferInput = Convert.ToInt32(Console.ReadLine());
+                            transferAccount = accounts.SingleOrDefault(x => x.AccountNumber == transferInput);
+                            if (transferAccount != acc)
                             {
-                                Console.WriteLine("You value need to be positive.");
-                                break;
-                            }
-                                
-                            if (acc.Balance > amount)
-                            {
-                                acc.Balance = acc.Balance - amount;
-                                transferAccount.Balance = transferAccount.Balance + amount;
-                                _accountList.Add(transferAccount);
+                                Console.WriteLine("Enter amount you wish to transfer?");
+                                var transferAmount = Console.ReadLine();
+                                var transferReplace = transferAmount.Replace(".", ",");
+                                var transferParsedSucced = decimal.TryParse(transferReplace, NumberStyles.Currency, new CultureInfo("sv-SE"), out amount);
                                 checkLoop = false;
+                                if (amount <= 0)
+                                {
+                                    Console.WriteLine("You value need to be positive.");
+                                    break;
+                                }
+
+                                if (acc.Balance > amount)
+                                {
+                                    acc.Balance = acc.Balance - amount;
+                                    transferAccount.Balance = transferAccount.Balance + amount;
+                                    _accountList.Add(transferAccount);
+                                    checkLoop = false;
+                                }
+                                else
+                                {
+                                    Console.WriteLine("This account have not enough money to do this Transaction, press any key to try again.");
+                                    checkLoop = true;
+                                }
                             }
                             else
                             {
-                                Console.WriteLine("This account have not enough money to do this Transaction, press any key to try again.");
+                                Console.WriteLine("The transaction should be between two different accounts");
                                 checkLoop = true;
                             }
                         }
-                        else
+                        catch (Exception e)
                         {
-                            Console.WriteLine("The transaction should be between two different accounts");
-                            checkLoop = true;
+                            if (e.Message.Contains("object"))
+                            {
+                                Console.WriteLine("Wrong Account number..");
+                            }
+                            else Console.WriteLine(e.Message);
+
+                            Console.WriteLine("Press enter to try again..");
+                            Console.ReadLine();
+                            Transactions(input);
                         }
+
                     }
                     Console.WriteLine("Transfer completed, " + amount + "kr was sent from " + acc.AccountNumber
                         + " to account number " + transferAccount.AccountNumber);
@@ -469,7 +485,7 @@ namespace Bank.Library.DatabaseHandler
             }
 
             Console.Clear();
-            Console.WriteLine("Customer Id: " + userAccount.Id + "Current balance is:");
+            Console.WriteLine("Customer Id: " + userAccount.Id + " Current balance is: ");
 
             foreach (var item in accounts)
             {
@@ -480,6 +496,7 @@ namespace Bank.Library.DatabaseHandler
                 _accountList.Add(acc);
             GoBackToMenu();
         }
+
     }
 }
 
