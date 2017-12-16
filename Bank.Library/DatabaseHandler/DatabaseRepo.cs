@@ -19,14 +19,17 @@ namespace Bank.Library.DatabaseHandler
 
         public static void GoBackToMenu()
         {
-            Console.WriteLine("Press 9 to go back to menu");
-            var menu = Console.ReadLine();
-            if (menu == "9")
+            string menu;
+            while (true)
             {
-                MainMenu.ShowMenu();
+                Console.WriteLine("Press 9 to go back to menu");
+                menu = Console.ReadLine();
+                if (menu == "9")
+                {
+                    MainMenu.ShowMenu();
+                }
             }
         }
-
 
         public static void ShowStats()
         {
@@ -36,42 +39,51 @@ namespace Bank.Library.DatabaseHandler
         }
 
         public static void SearchCustomer()
-
         {
             Console.Clear();
-            Console.WriteLine("Search for customer\n" + "You can use name or city.");
+            Console.WriteLine("Search for customer or press 9 to go back to menu \nYou can use name or city.");
             var input = Console.ReadLine();
             bool noCustomersFound = true;
 
-            foreach (var item in Customers)
+            if (input == "9")
             {
-                if (item.Name.ToUpper().Contains(input.ToUpper()) || item.City.ToUpper().Contains(input.ToUpper()))
+                MainMenu.ShowMenu();
+            }
+            else
+            {
+                foreach (var item in Customers)
                 {
-                    Console.WriteLine("ID: " + item.Id + "\nName: " + item.Name + "\nCity " + item.City);
-                    noCustomersFound = false;
+                    if (item.Name.ToUpper().Contains(input.ToUpper()) || item.City.ToUpper().Contains(input.ToUpper()))
+                    {
+                        Console.WriteLine("ID: " + item.Id + "\nName: " + item.Name + "\nCity " + item.City);
+                        noCustomersFound = false;
+                    }
                 }
+
+                if (noCustomersFound == true)
+                {
+                    Console.WriteLine("Can't find any customer with your input. Press enter to try again or press 9 back to menu");
+                    var inp = Console.ReadLine();
+
+                    if (inp == "9") MainMenu.ShowMenu();
+
+                    else SearchCustomer();
+                }
+                GoBackToMenu();
+                Console.ReadLine();
             }
-
-            if (noCustomersFound == true)
-            {
-                Console.WriteLine("Can't find any customer with your input. Press enter to try again or press 9 back to menu");
-                var inp = Console.ReadLine();
-
-                if (inp == "9") MainMenu.ShowMenu();
-
-                else SearchCustomer();
-            }
-            GoBackToMenu();
-            Console.ReadLine();
         }
 
         public static void ShowCustomerReport()
         {
             Console.Clear();
-            Console.WriteLine("Search customer by ID");
+            Console.WriteLine("Search customer by ID or press 9 to go back to menu");
             var input = Console.ReadLine();
             bool noCustomersFound = true;
-
+            if (input == "9")
+            {
+                MainMenu.ShowMenu();
+            }
             foreach (var item in Customers)
             {
                 if (item.Id.ToString().Contains(input))
@@ -98,7 +110,6 @@ namespace Bank.Library.DatabaseHandler
                 }
             }
 
-
             if (noCustomersFound == true)
             {
                 Console.WriteLine("Can't find any customer with your input. Press enter to try again or press 9 to go back to Menu");
@@ -108,125 +119,234 @@ namespace Bank.Library.DatabaseHandler
                 if (inp == "9") MainMenu.ShowMenu();
 
                 else ShowCustomerReport();
-
             }
             GoBackToMenu();
             Console.ReadLine();
         }
 
-        public static void SaveCustomerToFile()
+        public static void CreateNewCustomer()
         {
-            Console.Clear();
-            Console.WriteLine("Create new customer\n");
-            
-            Console.WriteLine("Organisation number: ");
-            var orgNr = Console.ReadLine();     
-            Console.WriteLine("Name: ");
-            var name = Console.ReadLine();
-            Console.WriteLine("Adress: ");
-            var adress = Console.ReadLine();
-            Console.WriteLine("AreaCode: ");
-            var areaCode = Console.ReadLine();
-            Console.WriteLine("City: ");
-            var city = Console.ReadLine();
-            Console.WriteLine("Region: ");
-            var region = Console.ReadLine();
-            Console.WriteLine("Country: ");
-            var country = Console.ReadLine();
-            Console.WriteLine("Phone: ");
-            var phone = Console.ReadLine();
-
-                var newId = _customerList.Last().Id;
-                newId++;
-                var newCustomer = new Customer
-                {
-                    Id = newId,
-                    OrgNumber = orgNr,
-                    Name = name,
-                    Adress = adress,
-                    AreaCode = areaCode,
-                    City = city,
-                    Region = region,
-                    Country = country,
-                    Phone = phone
-                };
-                _customerList.Add(newCustomer);
-
-            var newAccId = _accountList.Last().AccountNumber;
-            newAccId++;
-            var account = new Account
-            {
-                CustomerId = newCustomer.Id,
-                AccountNumber = newAccId,
-                Balance = 0
-            };
-            _accountList.Add(account);
-            SaveNewFile.WhenChangesCreateNewFile();
-
-
+            CustomerHandler.CreateNewCustomer();
+            GoBackToMenu();
         }
 
         public static void DeleteCustomer()
         {
             Console.Clear();
-            Console.Write("Input customer Id for the account you want to delete: ");
+            Console.WriteLine("Input customer Id  you want to delete or go back to menu by pressing 9");
             var userInput = Console.ReadLine();
-
-            foreach (var item in _accountList.ToList())
+            if (userInput == "9")
             {
-                foreach (var c in _customerList.ToList())
+                MainMenu.ShowMenu();
+            }
+            var id = int.TryParse(userInput, out int ParseduserInput);
+            if (id)
+            {
+                var CustemerToDelete = _customerList.FirstOrDefault(c => c.Id == ParseduserInput);
+                if (CustemerToDelete == null)
                 {
-                    if (Convert.ToInt32(userInput) == c.Id && item.CustomerId == c.Id)
+                    Console.WriteLine("Can't find any customer with your input. Press enter to try again or press 9 to go back to Menu");
+                    var inp = Console.ReadLine();
+
+                    if (inp == "9") MainMenu.ShowMenu();
+
+                    else DeleteCustomer();
+                }
+                else
+                {
+                    var AccountToDelet = _accountList.Where(a => a.CustomerId == ParseduserInput).ToList();
+                    foreach (var item in AccountToDelet)
                     {
-                        if (item.Balance > 0)
+                        if (item.Balance != 0)
                         {
-                            Console.WriteLine("Account has balance, cannot remove");
+                            Console.WriteLine("Custemer account  balance is not null. Press enter to try again or press 9 to go back to Menu");
+                            var inp = Console.ReadLine();
+
+                            if (inp == "9") MainMenu.ShowMenu();
+
+                            else DeleteCustomer();
                         }
-                        else
-                        {
-                            item.CustomerId = c.Id;
-                            var acc = item;
-                            _accountList.Remove(acc);
-                            _customerList.Remove(c);
-                            SaveNewFile.WhenChangesCreateNewFile();
-                        }
+                        else _accountList.Remove(item);
+                    }
+
+                    var accountCheck = _accountList.Where(z => z.CustomerId == ParseduserInput).ToList().Count();
+
+                    if (accountCheck == 0)
+                    {
+                        _customerList.Remove(CustemerToDelete);
+                    }
+
+                    else
+                    {
+                        Console.WriteLine("Customer account  balance is not null. Press enter to try again or press 9 to go back to Menu");
+                        Console.ReadLine();
                     }
                 }
             }
+
+            else
+            {
+                Console.WriteLine("CustemerId muste be a number. Press enter to try again or press 9 to go back to Menu");
+                var inp = Console.ReadLine();
+
+                if (inp == "9") MainMenu.ShowMenu();
+
+                else DeleteCustomer();
+            }
+
+            GoBackToMenu();
+        }
+
+        public static void CreateNewAccount()
+        {
+            Console.Clear();
+            Console.WriteLine("*Create new Account*\n");
+            Console.WriteLine("Enter Customer Id or press 9 to go back to menu");
+
+            var userInput = Console.ReadLine().Trim();
+            if (userInput == "9")
+            {
+                MainMenu.ShowMenu();
+            }
+            var control = int.TryParse(userInput, out int intCheck);
+
+            if (control)
+            {
+                var customer = _customerList.FirstOrDefault(i => i.Id == intCheck);
+                if (customer != null)
+                {
+                    var newAccId = _accountList.Last().AccountNumber;
+                    newAccId++;
+                    var account = new Account
+                    {
+                        CustomerId = customer.Id,
+                        AccountNumber = newAccId,
+                        Balance = 0
+                    };
+                    _accountList.Add(account);
+
+                    Console.WriteLine(customer.Name + ", Your new account has been created! ");
+                    Console.WriteLine("Account number: " + account.AccountNumber + " Balance: " + account.Balance);
+                }
+
+                else
+                {
+                    Console.WriteLine("No user found.. Please press key to try again");
+                    Console.ReadKey();
+                    CreateNewAccount();
+                }
+            }
+
+            else
+            {
+                Console.WriteLine("Wrong format.. Use numbers.. Press enter to try again");
+                Console.ReadLine();
+                CreateNewAccount();
+            }
+            GoBackToMenu();
         }
 
         public static void DeleteAccount()
         {
             Console.Clear();
-            Console.Write("Inpute customer Id for the account you want to delete: ");
-            var userInput = Console.ReadLine();
+            Console.WriteLine("*Delete Account*");
 
-            var account = _accountList.Where(x => x.AccountNumber == Convert.ToInt32(userInput)).FirstOrDefault();
-            if (account == null)
-            {
-                Console.WriteLine("Input is wrong or The account doesn't exist, Press enter to continue.");
-                Console.ReadLine();
-                DeleteAccount();
-            }
-            if (account.Balance == 0)
-            {
-                _accountList.Remove(account);
-                SaveNewFile.WhenChangesCreateNewFile();
-            }
-            else
-            {
-                Console.WriteLine("Account has balance, cannot remove, Press enter to continue.");
-                Console.ReadLine();
-                DeleteAccount();
-            }
+            Console.Write("Input customer Id to view accounts: ");
 
+            var userInput = Console.ReadLine().Trim();
+            var control = int.TryParse(userInput, out int intCheck);
+            var customer = _customerList.FirstOrDefault(x => x.Id == intCheck);
+            var accounts = _accountList.Where(i => i.CustomerId == intCheck);
+
+            if (control)
+            {
+                if (customer == null)
+                {
+                    Console.WriteLine("User not found..  Press key to try Again ");
+                    Console.ReadKey();
+                    DeleteAccount();
+                }
+
+                foreach (var item in accounts)
+                {
+                    Console.WriteLine(item.AccountNumber + " balance: " + item.Balance);
+                }
+
+                Console.Write("Enter account to delete: ");
+                var accInput = Convert.ToInt32(Console.ReadLine());
+
+                foreach (var item in accounts.ToList())
+                {
+                    if (accInput == item.AccountNumber)
+                    {
+                        if (item.Balance == 0)
+                        {
+                            _accountList.Remove(item);
+                            Console.WriteLine(item.AccountNumber + " has been removed");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Error: This account balance is not zero.. ");
+                            Console.WriteLine("Press key to restart");
+                            Console.ReadKey();
+                            DeleteAccount();
+                        }
+                    }
+                }
+            }
+            GoBackToMenu();
         }
 
         public static void Transactions(string input)
         {
             Console.Clear();
-            Console.Write("Type in id number to login:");
+            var sb = new StringBuilder();
+            switch (input)
+            {
+                case "1":
+                    sb.Append("a withdrawal");
+                    sb.AppendLine();
+                    break;
+                case "2":
+                    sb.Append("your deposit");
+                    sb.AppendLine();
+                    break;
+                case "3":
+                    sb.Append("your transfer");
+                    sb.AppendLine();
+                    break;
+            }
+
+            Console.WriteLine("Type in id number to login:");
             var userInput = Console.ReadLine();
+
+            int parsedUserInput = 0;
+            try
+            {
+                parsedUserInput = Int32.Parse(userInput);
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Please press a valid number, press enter to try again or press 9 to go back to menu");
+                var inputs = Console.ReadLine();
+                if (inputs == "9")
+                {
+                    MainMenu.ShowMenu();
+                }
+                Transactions(input);
+            }
+
+            var valid = _customerList.Any(x => x.Id == Int32.Parse(userInput));
+            if (!valid)
+            {
+                Console.WriteLine("Account does not exist, press enter to try again or press 9 to go back to menu");
+                var inputs = Console.ReadLine();
+                if (inputs == "9")
+                {
+                    MainMenu.ShowMenu();
+                }
+                Transactions(input);
+            }
             Console.Clear();
             Account acc = null;
             var userAccount = _customerList.SingleOrDefault(user => user.Id == Int32.Parse(userInput));
@@ -238,25 +358,67 @@ namespace Bank.Library.DatabaseHandler
                 Console.WriteLine("Account: " + item.AccountNumber + " has Balance: " + item.Balance + "kr");
             }
 
-            Console.WriteLine("Choose one of above accounts");
-            var accountInput = Int32.Parse(Console.ReadLine());
+            Console.WriteLine("\n\nSelect one of the above accounts to make " + sb);
+            int accountInput = 0;
+            try
+            {
+                accountInput = Int32.Parse(Console.ReadLine());
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Please press a valid number, press enter to try again or press 9 to go back to menu");
+                var inputs = Console.ReadLine();
+                if (inputs == "9")
+                {
+                    MainMenu.ShowMenu();
+                }
+                Transactions(input);
+            }
             acc = accounts.SingleOrDefault(x => x.AccountNumber == accountInput);
+            if (acc == null)
+            {
+                Console.WriteLine("Account number does not exist, press enter to try again or press 9 to go back to menu");
+                var inputs = Console.ReadLine();
+                if (inputs == "9")
+                {
+                    MainMenu.ShowMenu();
+                }
+                Transactions(input);
+            }
 
             switch (input)
             {
-                case "0":
-                    SaveNewFile.WhenChangesCreateNewFile();
-                    break;
                 case "1":
                     Console.WriteLine("Enter amount for withdrawal");
-                    var withdrawAmount = Convert.ToDecimal(Console.ReadLine());
-                    acc.Balance = acc.Balance - withdrawAmount;
+                    var withdrawAmount = Console.ReadLine();
+                    var amountReplace = withdrawAmount.Replace(".", ",");
+                    decimal newWithdrawAmount;
+                    var withdrawParsedSucced = decimal.TryParse(amountReplace, NumberStyles.Currency, new CultureInfo("sv-SE"), out newWithdrawAmount);
+                    if (newWithdrawAmount <= 0)
+                    {
+                        Console.WriteLine("You value need to be positive.");
+                        break;
+                    }
+                    if (newWithdrawAmount > acc.Balance)
+                    {
+                        Console.WriteLine("Whops! You can only withdraw up to: " + acc.Balance.ToString());
+                        break;
+                    }
+                    acc.Balance = acc.Balance - newWithdrawAmount;
                     Console.Clear();
                     break;
                 case "2":
                     Console.WriteLine("Enter amount you wish to insert");
-                    var insert = Convert.ToDecimal(Console.ReadLine());
-                    acc.Balance = acc.Balance + insert;
+                    var insert = Console.ReadLine();
+                    var insertReplace = insert.Replace(".", ",");
+                    decimal newInsertAmount;
+                    var insertParsedSucced = decimal.TryParse(insertReplace, NumberStyles.Currency, new CultureInfo("sv-SE"), out newInsertAmount);
+                    if (newInsertAmount <= 0)
+                    {
+                        Console.WriteLine("You value need to be positive.");
+                        break;
+                    }
+                    acc.Balance = acc.Balance + newInsertAmount;
                     Console.Clear();
                     break;
                 case "3":
@@ -267,31 +429,55 @@ namespace Bank.Library.DatabaseHandler
                     while (checkLoop)
                     {
                         Console.WriteLine("Transfer to account number?");
-                        transferInput = Convert.ToInt32(Console.ReadLine());
-                        transferAccount = accounts.SingleOrDefault(x => x.AccountNumber == transferInput);
-                        if (transferAccount != acc)
+                        try
                         {
-                            Console.WriteLine("Enter amount you wish to transfer?");
-                            amount = Convert.ToDecimal(Console.ReadLine());
-                            checkLoop = false;
-                            if (acc.Balance > amount)
+                            transferInput = Convert.ToInt32(Console.ReadLine());
+                            transferAccount = accounts.SingleOrDefault(x => x.AccountNumber == transferInput);
+                            if (transferAccount != acc)
                             {
-                                acc.Balance = acc.Balance - amount;
-                                transferAccount.Balance = transferAccount.Balance + amount;
-                                _accountList.Add(transferAccount);
+                                Console.WriteLine("Enter amount you wish to transfer?");
+                                var transferAmount = Console.ReadLine();
+                                var transferReplace = transferAmount.Replace(".", ",");
+                                var transferParsedSucced = decimal.TryParse(transferReplace, NumberStyles.Currency, new CultureInfo("sv-SE"), out amount);
                                 checkLoop = false;
+                                if (amount <= 0)
+                                {
+                                    Console.WriteLine("You value need to be positive.");
+                                    break;
+                                }
+
+                                if (acc.Balance > amount)
+                                {
+                                    acc.Balance = acc.Balance - amount;
+                                    transferAccount.Balance = transferAccount.Balance + amount;
+                                    _accountList.Add(transferAccount);
+                                    checkLoop = false;
+                                }
+                                else
+                                {
+                                    Console.WriteLine("This account have not enough money to do this Transaction, press any key to try again.");
+                                    checkLoop = true;
+                                }
                             }
                             else
                             {
-                                Console.WriteLine("This account have not enough money to do this Transaction, press any key to try agine");
+                                Console.WriteLine("The transaction should be between two different accounts");
                                 checkLoop = true;
                             }
                         }
-                        else
+                        catch (Exception e)
                         {
-                            Console.WriteLine("The transaction should be between two different accounts");
-                            checkLoop = true;
+                            if (e.Message.Contains("object"))
+                            {
+                                Console.WriteLine("Wrong Account number..");
+                            }
+                            else Console.WriteLine(e.Message);
+
+                            Console.WriteLine("Press enter to try again..");
+                            Console.ReadLine();
+                            Transactions(input);
                         }
+
                     }
                     Console.WriteLine("Transfer completed, " + amount + "kr was sent from " + acc.AccountNumber
                         + " to account number " + transferAccount.AccountNumber);
@@ -299,7 +485,8 @@ namespace Bank.Library.DatabaseHandler
             }
 
             Console.Clear();
-            Console.WriteLine("Customer Id: " + userAccount.Id + "Current balance is:");
+            Console.WriteLine("Customer Id: " + userAccount.Id + " Current balance is: ");
+
             foreach (var item in accounts)
             {
                 Console.WriteLine("Account: " + item.AccountNumber + " has Balance: " + item.Balance + "kr");
@@ -307,8 +494,9 @@ namespace Bank.Library.DatabaseHandler
 
             if (acc != null)
                 _accountList.Add(acc);
-            SaveNewFile.WhenChangesCreateNewFile();
+            GoBackToMenu();
         }
+
     }
 }
 

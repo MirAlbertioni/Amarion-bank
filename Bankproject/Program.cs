@@ -10,8 +10,6 @@ namespace Bankproject
         {
             ReadFile.ReadFromTxtFile();
             MainMenu.ShowMenu();
-            DatabaseRepo.ShowStats();
-
         }
     }
 }

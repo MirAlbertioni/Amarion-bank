@@ -19,8 +19,10 @@ namespace Bank.Library.Menus
                 "4) Delete customer \n " +
                 "5) Create new account \n " +
                 "6) Delete account \n " +
-                "7) Account overview \n " +
-                "\n 9) Back to menu\n" );
+                "7) Account overview \n\n\n");
+
+            DatabaseRepo.ShowStats();
+
 
             var userInput = Console.ReadLine();
             if (userInput == "0")
@@ -38,16 +40,33 @@ namespace Bank.Library.Menus
 
             else if (userInput == "3")
             {
-                DatabaseRepo.SaveCustomerToFile();
+                DatabaseRepo.CreateNewCustomer();
             }
+
+            else if (userInput == "4")
+            {
+                DatabaseRepo.DeleteCustomer();
+            }
+
+            else if (userInput == "5")
+            {
+                DatabaseRepo.CreateNewAccount();
+            }
+
+            else if (userInput == "6")
+            {
+                DatabaseRepo.DeleteAccount();
+            }
+
 
             else if (userInput == "7")
             {
                 AccountMenu.ShowAccountMenu();
             }
-
-
-
+            else
+            {
+                MainMenu.ShowMenu();
+            }
         }
     }
 }

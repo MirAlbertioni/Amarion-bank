@@ -15,9 +15,9 @@ namespace BankTesting
         [Fact]
         public void SearchCostumer()
         {
-            var customerList = DatabaseRepo.Customers;
+            var customerList =  DatabaseRepo.Customers;
             var custListIdLast = customerList.Select(x => x.Id).Last();
-            Assert.Equal("1093", custListIdLast.ToString());
+            Assert.Equal("1091", custListIdLast.ToString());            
         }
 
         [Fact]
@@ -47,7 +47,7 @@ namespace BankTesting
             decimal insertAmoun = 250.30M;
             accId.Balance = accId.Balance + insertAmoun;
 
-            Assert.Equal("764.70", accId.Balance.ToString());
+            Assert.Equal("764,70", accId.Balance.ToString());
         }
 
         [Fact]
