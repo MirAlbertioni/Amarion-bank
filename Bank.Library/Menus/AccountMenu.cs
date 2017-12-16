@@ -1,4 +1,4 @@
-﻿using Bank.Library.DatabaseHandler;
+using Bank.Library.DatabaseHandler;
 using System;
 using System.Collections.Generic;
 using System.Text;
