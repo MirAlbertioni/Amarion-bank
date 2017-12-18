@@ -30,6 +30,16 @@ namespace BankTesting
         }
 
         [Fact]
+        public void withdrawal()
+        {
+            var acc = DatabaseRepo.Accounts;
+            var accId = acc.Where(x => x.AccountNumber == 13384).FirstOrDefault();
+            decimal withdrawal = 90.369M;
+            accId.Balance = accId.Balance - withdrawal;
+            Assert.Equal("8909.230", accId.Balance.ToString());
+        }
+
+        [Fact]
         public void Insert()
         {
             var acc = DatabaseRepo.Accounts;
